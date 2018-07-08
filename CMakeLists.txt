@@ -18,7 +18,7 @@ project(${PROJECT_NAME})
 find_package(glm REQUIRED)
 find_package(Effects REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Quick Widgets)
-find_package(GPUEngine REQUIRED COMPONENTS geGL geSG geUtil)
+find_package(GPUEngine REQUIRED)
 find_package(AssimpModelLoader REQUIRED HINTS /home/makku/Programs/GPUEngine/geAd/AssimpModelLoader/cmake)
 find_package(QtImageLoader REQUIRED HINTS /home/makku/Programs/GPUEngine/geAd/QtImageLoader/cmake)
 
@@ -45,6 +45,7 @@ set(GRAPHICS_FILES
     src/graphics/VisualizationTechnique.h
     src/graphics/SimpleVT.cpp src/graphics/SimpleVT.h
     src/graphics/skybox/SkyboxVT.h src/graphics/skybox/SkyboxVT.cpp
+    src/graphics/LaserManager.h src/graphics/LaserManager.cpp
 )
 
 set(UTIL_FILES
@@ -64,7 +65,7 @@ source_group(graphics FILES ${GRAPHICS_FILES})
 
 
 add_executable(${APP_NAME} ${CORE_FILES} ${GLSG_FILES} ${GRAPHICS_FILES} ${UTIL_FILES} ${SG_FILES})
-target_link_libraries(${APP_NAME} Qt5::Quick Qt5::Widgets geGL geSG geUtil AssimpModelLoader QtImageLoader)
+target_link_libraries(${APP_NAME} Qt5::Quick Qt5::Widgets Effects geGL geSG geUtil AssimpModelLoader QtImageLoader)
 
 target_include_directories(${APP_NAME} PUBLIC "src/")
 target_include_directories(${APP_NAME} PUBLIC "src/core")

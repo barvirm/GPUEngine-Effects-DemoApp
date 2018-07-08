@@ -11,7 +11,6 @@ int main(int argc, char **argv) {
     QGuiApplication app(argc, argv);
     QQuickWindow qw;
 
-    qw.resize(1200,1000);
     msg::Renderer renderer(&qw);
     std::shared_ptr<ge::sg::Scene> scene = app::SceneLoader::loadScene(APP_RESOURCES"/models/ship.obj");
     renderer.setScene(scene);
@@ -22,6 +21,6 @@ int main(int argc, char **argv) {
     qw.show();
 
 
-
+    qw.resize(1200,1000);
     return app.exec();
 }

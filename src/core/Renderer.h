@@ -23,6 +23,9 @@ namespace ge {
 namespace msg {
     class SimpleVT;
     class SkyboxVT;
+    class LaserVT;
+    class AnimationManager;
+    class LaserManager;
 }
 
 namespace msg {
@@ -55,14 +58,18 @@ namespace msg {
 
         std::shared_ptr<msg::SimpleVT> _simpleVT;
         std::shared_ptr<msg::SkyboxVT> _skyboxVT;
-        //shared_ptr<msg::AnimationManager> _animationManager;
+        std::shared_ptr<msg::LaserVT> _laserVT;
+        std::shared_ptr<msg::AnimationManager> _animationManager;
         std::chrono::time_point<std::chrono::high_resolution_clock> _clock;
+        std::shared_ptr<msg::LaserManager> _laserManager;
 
     private:
         void setupCamera();
         bool initVT();
         bool initSimpleVT();
         bool initSkyboxVT();
+        bool initLaserVT();
+        bool initTestVT();
         void drawVT();
 
     };
