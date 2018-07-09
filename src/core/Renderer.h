@@ -34,7 +34,6 @@ namespace msg {
     public:
         Renderer(QObject *parent = nullptr);
         void setupGLState();
-        void viewPortResize(int w, int h);
         inline void updateViewPort(int w, int h) { _viewPort->x = w; _viewPort->y = h; };
         std::shared_ptr<ge::util::OrbitCamera> orbitCamera;
         std::shared_ptr<ge::util::PerspectiveCamera> perspectiveCamera;

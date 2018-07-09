@@ -137,10 +137,6 @@ void msg::Renderer::update() {
 
 }
 
-void viewPortResize(int w, int h) {
- // TODO 
-}
-
 void msg::Renderer::setupCamera() {
     std::cout << "Renderer setupCamera" << std::endl;
     orbitCamera->setDistance(20.f);
@@ -164,9 +160,7 @@ bool msg::Renderer::initSimpleVT() {
     auto simple_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::core::loadTextFile(shaderDir+"simple_vs.glsl")));
     auto simple_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"simple_fs.glsl")));
     auto prog(std::make_shared<ge::gl::Program>(simple_vs, simple_fs));
-    if (!prog.get()->isProgram()) {
-        std::cerr << "Problem with simpleVT shaders" << std::endl;
-    }
+
     _simpleVT->program = prog;
     return true;
 }
@@ -182,6 +176,7 @@ bool msg::Renderer::initLaserVT() {
     
     _laserVT->gl = _gl;
     _laserVT->program = program;
+    _laserVT->orbitCamera = orbitCamera;
 
     std::string imagePath(APP_RESOURCES"/texture/laserbolt.png");
     std::shared_ptr<QtImage> image(QtImageLoader::loadImage(imagePath.c_str()));
@@ -205,9 +200,6 @@ bool msg::Renderer::initSkyboxVT() {
     auto skybox_gs(std::make_shared<ge::gl::Shader>(GL_GEOMETRY_SHADER, ge::core::loadTextFile(shaderDir+"skybox_gs.glsl")));
     auto skybox_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"skybox_fs.glsl")));
     auto program(std::make_shared<ge::gl::Program>(skybox_vs, skybox_gs, skybox_fs));
-    if (!program.get()->isProgram()) {
-        std::cerr << "Problem with skyboxVT shaders" << std::endl;
-    }
 
     _skyboxVT->gl = _gl;
     _skyboxVT->program = program;
