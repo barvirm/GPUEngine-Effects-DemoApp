@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <geSG/Animation.h>
 #include <sg/AnimationManager.h>
+#include <iostream>
 
 namespace msg {
     class AnimationManager;
@@ -44,7 +45,8 @@ namespace msg {
         std::shared_ptr<ge::sg::Animation> animation;
         getShotingAnimation(missile,animation);
         ShootingAnimationMap[missile.get()] = animation;
-        //animationManager->playAnimation(animation, ge::core::time_point(std::chrono::duration<double>(*time.get())));
+        auto now(std::chrono::duration<double>(*time.get()));
+        animationManager->playAnimation(animation, now);
     }
 
     template<class T>
@@ -57,7 +59,8 @@ namespace msg {
         std::shared_ptr<ge::sg::Animation> animation;
         getFinishAnimation(missile, animation);
         FinishAnimation[missile.get()] = animation;
-        animationManager->playAnimation(animation, ge::core::time_point(std::chrono::duration<double>(*time.get())));
+        auto now(std::chrono::duration<double>(*time.get()));
+        animationManager->playAnimation(animation, now);
     }
 }
 

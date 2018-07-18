@@ -14,6 +14,7 @@
 #include <sg/AnimationManager.h>
 #include <glsg/TextureFactory.h>
 #include <geSG/Material.h>
+#include <sg/AnimationManager.h>
 
 #include <skybox/SkyboxVT.h>
 #include <Effects/laser/LaserVT.h>
@@ -39,6 +40,9 @@ msg::Renderer::Renderer(QObject *parent) :
 {
     std::cout << "Renderer ctor" << std::endl;
     setupCamera();
+    _laserManager->animationManager = _animationManager;
+    _laserManager->time = _time;
+
 }
 
 
@@ -95,6 +99,13 @@ void msg::Renderer::setScene(std::shared_ptr<ge::sg::Scene> &loadedScene) {
 }
 
 void msg::Renderer::update() {
+
+    auto now(std::chrono::high_resolution_clock::now());
+    auto runTime(std::chrono::duration_cast<std::chrono::duration<double>>(now - _clock));
+    *_time = runTime.count();
+    _animationManager->update(std::chrono::duration<double>(*_time));
+    
+
     if (_sceneToProcess) {
         std::cout << "Scene Processing" << std::endl;
         _glScene = ge::glsg::GLSceneProcessor::processScene(_scene,_gl);
@@ -111,7 +122,16 @@ void msg::Renderer::update() {
                 2.0f
             )
         );
+        std::shared_ptr<msg::Laser> l1(
+            std::make_shared<msg::Laser>(
+                glm::vec3(1.f,0.f,15.f),
+                glm::vec3(1.f,0.f,8.f),
+                glm::vec4(0.f,0.f,1.f,1.f),
+                2.0f
+            )
+        );
         _laserManager->addMissile(l);
+        _laserManager->addMissile(l1);
         _laserVT->lasers = _laserManager->missiles;
     }
 
@@ -141,7 +161,7 @@ void msg::Renderer::setupCamera() {
     std::cout << "Renderer setupCamera" << std::endl;
     orbitCamera->setDistance(20.f);
     orbitCamera->setYAngle(3.1415f/1.2f);
-    orbitCamera->setXAngle(3.1415f/1.0f);
+    orbitCamera->setXAngle(3.1415f/6.5f);
     orbitCamera->setFocus(glm::vec3(0,0,0));
 
     perspectiveCamera->setNear(0.1f);

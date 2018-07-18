@@ -34,7 +34,7 @@ void msg::LaserManager::getShotingAnimation(std::shared_ptr<msg::Laser> &missile
     anim->channels.emplace_back(mvch);
 
     mvch->positionKF.emplace_back(ge::core::time_point(0s), glm::vec3(0,0,0));
-    mvch->positionKF.emplace_back(ge::core::time_point(10s), missile->getDirection() * 800.0f);
+    mvch->positionKF.emplace_back(ge::core::time_point(10s), missile->getDirection() * 100.0f);
 
     mvch->setTarget(missile->getMatrix());
     animation = anim;
