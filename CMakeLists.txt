@@ -37,6 +37,7 @@ set(GLSG_FILES
 set(CORE_FILES
     src/core/main.cpp
     src/core/QuickRendererBase.cpp src/core/QuickRendererBase.h
+    src/core/GERendererBase.cpp src/core/GERendererBase.h
     src/core/Renderer.cpp src/core/Renderer.h
     src/core/SceneLoader.cpp src/core/SceneLoader.h
 )

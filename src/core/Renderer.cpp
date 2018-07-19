@@ -1,6 +1,4 @@
 #include <Renderer.h>
-#include <QOpenGLContext>
-#include <QQuickItem>
 #include <SimpleVT.h>
 #include <geGL/geGL.h>
 #include <geCore/Text.h>
@@ -22,15 +20,13 @@
 
 
 msg::Renderer::Renderer(QObject *parent) :
-    QuickRendererBase(parent),
+    GERendererBase(parent),
     orbitCamera(std::make_shared<ge::util::OrbitCamera>()),
     perspectiveCamera(std::make_shared<ge::util::PerspectiveCamera>()),
-    _gl(nullptr),
     _scene(nullptr),
     _glScene(nullptr),
     _time(std::make_shared<double>()),
     _sceneToProcess(false),
-    _viewPort(std::make_shared<glm::vec2>(1000,800)),
     _simpleVT(std::make_shared<msg::SimpleVT>()),
     _skyboxVT(std::make_shared<msg::SkyboxVT>()),
     _laserVT(std::make_shared<msg::LaserVT>()),
@@ -42,14 +38,16 @@ msg::Renderer::Renderer(QObject *parent) :
     setupCamera();
     _laserManager->animationManager = _animationManager;
     _laserManager->time = _time;
-
 }
 
+void msg::Renderer::onViewportChanged() {
+    std::cout << "onViewportChanged" << std::endl;
+    _gl->glViewport(0, 0, _viewport->x, _viewport->y);
+    perspectiveCamera->setAspect(_viewport->x / _viewport->y);
+}
 
-void msg::Renderer::onViewportChange() {
-    std::cout << "onViewportChange" << std::endl;
-    _gl->glViewport(0, 0, _viewPort->x, _viewPort->y);
-    perspectiveCamera->setAspect(_viewPort->x / _viewPort->y);
+void msg::Renderer::onContextCreated() {
+    initVT();
 }
 
 void msg::Renderer::setupGLState() {
@@ -59,36 +57,13 @@ void msg::Renderer::setupGLState() {
     _gl->glEnable(GL_DEPTH_TEST);
 }
 
-void msg::Renderer::onWidthChanged(int w) {
-    std::cout << "Rendered onWidthChanged" << std::endl;
-    _viewPort->x = w;
-    onViewportChange();
-}
-
-void msg::Renderer::onHeightChanged(int h) {
-    std::cout << "Rendered onHeightChanged" << std::endl;
-    _viewPort->y = h;
-    onViewportChange();
-}
-
 void msg::Renderer::beforeRendering() {
     //std::cout << "Renderer beforeRendering" << std::endl;
-    update();
     setupGLState();
+    update();
     drawVT();
     _qqw->resetOpenGLState();
     _qqw->update();
-}
-
-void msg::Renderer::onOGLContextCreated(QOpenGLContext *context) {
-    std::cout << "Renderer onOGLContextCreated" << std::endl;
-    context->makeCurrent(_qqw);
-
-    ge::gl::init();
-    _gl = std::make_shared<ge::gl::Context>();
-    initVT();
-
-    context->doneCurrent();
 }
 
 void msg::Renderer::setScene(std::shared_ptr<ge::sg::Scene> &loadedScene) {
@@ -144,8 +119,8 @@ void msg::Renderer::update() {
 
 
     glm::vec3 CP = static_cast<glm::vec3>(glm::inverse(viewMatrix)[3]);
-    glm::vec4 WP(-_viewPort->x * 0.5f, -_viewPort->y * 0.5f, _viewPort->x, _viewPort->y);
-    glm::mat4 OP = glm::ortho(-_viewPort->x * 0.5f, _viewPort->x * 0.5f, -_viewPort->y * 0.5f, _viewPort->y * 0.5f, -1.0f, 1.0f);
+    glm::vec4 WP(-_viewport->x * 0.5f, -_viewport->y * 0.5f, _viewport->x, _viewport->y);
+    glm::mat4 OP = glm::ortho(-_viewport->x * 0.5f, _viewport->x * 0.5f, -_viewport->y * 0.5f, _viewport->y * 0.5f, -1.0f, 1.0f);
     glm::mat4 OW = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 1.0f, 0.0));
 
     _laserVT->program->set4fv("viewport", glm::value_ptr(WP));
@@ -225,7 +200,7 @@ bool msg::Renderer::initSkyboxVT() {
     _skyboxVT->program = program;
     _skyboxVT->perspectiveCamera = perspectiveCamera;
     _skyboxVT->orbitCamera = orbitCamera;
-    _skyboxVT->viewport = _viewPort;
+    _skyboxVT->viewport = _viewport;
 
 
     QtImageLoaderWrapper loader;
