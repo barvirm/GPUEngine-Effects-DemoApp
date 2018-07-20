@@ -31,10 +31,11 @@ msg::Renderer::Renderer(QObject *parent) :
     _skyboxVT(std::make_shared<msg::SkyboxVT>()),
     _laserVT(std::make_shared<msg::LaserVT>()),
     _animationManager(std::make_shared<msg::AnimationManager>()),
-    _clock(std::chrono::high_resolution_clock::now()),
-    _laserManager(std::make_shared<msg::LaserManager>())
+    _laserManager(std::make_shared<msg::LaserManager>()),
+    _stopwatch(std::make_shared<app::util::Stopwatch<double>>())
 {
     std::cout << "Renderer ctor" << std::endl;
+    _stopwatch->start();
     setupCamera();
     _laserManager->animationManager = _animationManager;
     _laserManager->time = _time;
@@ -75,9 +76,7 @@ void msg::Renderer::setScene(std::shared_ptr<ge::sg::Scene> &loadedScene) {
 
 void msg::Renderer::update() {
 
-    auto now(std::chrono::high_resolution_clock::now());
-    auto runTime(std::chrono::duration_cast<std::chrono::duration<double>>(now - _clock));
-    *_time = runTime.count();
+    *_time = _stopwatch->getTime();
     _animationManager->update(std::chrono::duration<double>(*_time));
     
 

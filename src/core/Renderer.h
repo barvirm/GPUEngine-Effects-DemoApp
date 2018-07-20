@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GERendererBase.h>
+#include <util/Stopwatch.h>
 
 namespace ge {
     namespace util {
@@ -26,12 +27,15 @@ namespace msg {
 namespace msg {
     class Renderer : public GERendererBase {
         Q_OBJECT
+
     public:
         Renderer(QObject *parent = nullptr);
         void setupGLState();
         std::shared_ptr<ge::util::OrbitCamera> orbitCamera;
         std::shared_ptr<ge::util::PerspectiveCamera> perspectiveCamera;
-        virtual void setScene(std::shared_ptr<ge::sg::Scene>& loadedScene);
+        std::shared_ptr<app::util::Stopwatch<double>> _stopwatch;
+        virtual void setScene(std::shared_ptr<ge::sg::Scene> &loadedScene);
+
     public slots:
         virtual void beforeRendering() override;
    protected:
@@ -49,7 +53,6 @@ namespace msg {
         std::shared_ptr<msg::SkyboxVT> _skyboxVT;
         std::shared_ptr<msg::LaserVT> _laserVT;
         std::shared_ptr<msg::AnimationManager> _animationManager;
-        std::chrono::time_point<std::chrono::high_resolution_clock> _clock;
         std::shared_ptr<msg::LaserManager> _laserManager;
 
     private:
