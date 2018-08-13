@@ -19,6 +19,7 @@
 #include <LaserManager.h>
 #include <skybox/SkyboxVT.h>
 #include <Effects/laser/LaserVT.h>
+#include <Effects/shield/ShieldVT.h>
 #include <ShieldManager.h>
 
 msg::Renderer::Renderer(QObject *parent) :
@@ -32,6 +33,7 @@ msg::Renderer::Renderer(QObject *parent) :
     _simpleVT(std::make_shared<msg::SimpleVT>()),
     _skyboxVT(std::make_shared<msg::SkyboxVT>()),
     _laserVT(std::make_shared<msg::LaserVT>()),
+    _shieldVT(std::make_shared<msg::ShieldVT>()),
     _animationManager(std::make_shared<msg::AnimationManager>()),
     _laserManager(std::make_shared<msg::LaserManager>()),
     _shieldManager(std::make_shared<msg::ShieldManager>()),
@@ -90,7 +92,7 @@ void msg::Renderer::update() {
         _sceneToProcess = false;
 
         _laserManager->orbitCamera = orbitCamera;
-        std::shared_ptr<msg::Laser> l(
+        auto l(
             std::make_shared<msg::Laser>(
                 glm::vec3(0.f,0.f,8.f),
                 glm::vec3(0.f,0.f,15.f),
@@ -98,7 +100,7 @@ void msg::Renderer::update() {
                 2.0f
             )
         );
-        std::shared_ptr<msg::Laser> l1(
+        auto l1(
             std::make_shared<msg::Laser>(
                 glm::vec3(1.f,0.f,15.f),
                 glm::vec3(1.f,0.f,8.f),
@@ -112,9 +114,10 @@ void msg::Renderer::update() {
         _laserManager->addMissile(l1);
         _laserVT->lasers = _laserManager->missiles;
     }
-
     _laserManager->update();
     _laserVT->update();
+    _shieldVT->update();
+
     auto projectionMatrix = perspectiveCamera->getProjection();
     auto viewMatrix = orbitCamera->getView();
     _simpleVT->program->setMatrix4fv("projectionMatrix", glm::value_ptr(projectionMatrix));
@@ -132,6 +135,10 @@ void msg::Renderer::update() {
     _laserVT->program->setMatrix4fv("u_Projection", glm::value_ptr(OP));
     _laserVT->program->setMatrix4fv("projectionMatrix", glm::value_ptr(projectionMatrix));
     _laserVT->program->setMatrix4fv("viewMatrix", glm::value_ptr(viewMatrix));
+
+    _shieldVT->program->setMatrix4fv("projectionMatrix", glm::value_ptr(projectionMatrix));
+    _shieldVT->program->setMatrix4fv("viewMatrix", glm::value_ptr(viewMatrix));
+    _shieldVT->program->set1f("time", *_time);
 
 }
 
@@ -190,6 +197,22 @@ bool msg::Renderer::initLaserVT() {
     return true;
 }
 
+bool msg::Renderer::initShieldVT() {
+    std::cout << "Renderer initShieldVT" << std::endl;
+    std::string shaderDir(APP_RESOURCES"/shaders/");
+
+    auto shield_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::core::loadTextFile(shaderDir+"shield_vs.glsl")));
+    auto shield_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"shield_fs.glsl")));
+    auto program(std::make_shared<ge::gl::Program>(shield_vs, shield_fs));
+
+    _shieldVT->gl = _gl;
+    _shieldVT->program = program;
+    _shieldVT->shields = _shieldManager->shields;
+    _shieldVT->init();
+
+    return true;
+}
+
 bool msg::Renderer::initSkyboxVT() {
     std::cout << "Renderer initSkyboxVT" << std::endl;
 
@@ -221,6 +244,7 @@ bool msg::Renderer::initVT() {
     i &= initSimpleVT();
     i &= initSkyboxVT();
     i &= initLaserVT();
+    i &= initShieldVT();
 
     
     return i;
@@ -232,4 +256,5 @@ void msg::Renderer::drawVT() {
     _skyboxVT->draw();
     _simpleVT->draw();
     _laserVT->draw();
+    _shieldVT->draw();
 }

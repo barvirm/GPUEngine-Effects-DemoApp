@@ -19,6 +19,7 @@ namespace ge {
 namespace msg {
     class SimpleVT;
     class SkyboxVT;
+    class ShieldVT;
     class LaserVT;
     class AnimationManager;
     class LaserManager;
@@ -52,6 +53,7 @@ namespace msg {
 
         std::shared_ptr<msg::SimpleVT> _simpleVT;
         std::shared_ptr<msg::SkyboxVT> _skyboxVT;
+        std::shared_ptr<msg::ShieldVT> _shieldVT;
         std::shared_ptr<msg::LaserVT> _laserVT;
         std::shared_ptr<msg::AnimationManager> _animationManager;
         std::shared_ptr<msg::LaserManager> _laserManager;
@@ -64,6 +66,7 @@ namespace msg {
         bool initSkyboxVT();
         bool initLaserVT();
         bool initTestVT();
+        bool initShieldVT();
         void drawVT();
     };
 }

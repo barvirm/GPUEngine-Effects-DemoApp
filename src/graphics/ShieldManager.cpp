@@ -4,15 +4,18 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 void msg::ShieldManager::addShield(glm::vec3 center, float radius) {
-    glm::mat4 m(1.0);
-    m *= glm::translate(m, center);
-    m *= glm::scale(m, glm::vec3(radius));
-    auto shield(std::make_shared<msg::Shield>(center, radius, std::make_shared<glm::mat4>(m)));
+    std::shared_ptr<glm::mat4> m = std::make_shared<glm::mat4>(
+		glm::vec4(radius, 0, 0, 0),
+        glm::vec4(0, radius, 0, 0),
+        glm::vec4(0, 0, radius, 0),
+        glm::vec4(center, 1.0)
+	);
+    msg::Shield shield(center, radius, m);
     shields->emplace_back(shield);
 };
 
 msg::ShieldManager::ShieldManager() {
     std::cout << "ShieldManager ctor" << std::endl;
-    shields = std::make_shared<std::vector<std::shared_ptr<msg::Shield>>>();
+    shields = std::make_shared<std::vector<msg::Shield>>();
 }
 
