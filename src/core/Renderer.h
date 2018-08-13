@@ -22,6 +22,7 @@ namespace msg {
     class LaserVT;
     class AnimationManager;
     class LaserManager;
+    class ShieldManager;
 }
 
 namespace msg {
@@ -54,6 +55,7 @@ namespace msg {
         std::shared_ptr<msg::LaserVT> _laserVT;
         std::shared_ptr<msg::AnimationManager> _animationManager;
         std::shared_ptr<msg::LaserManager> _laserManager;
+        std::shared_ptr<msg::ShieldManager> _shieldManager;
 
     private:
         void setupCamera();

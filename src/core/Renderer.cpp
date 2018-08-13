@@ -1,23 +1,25 @@
 #include <Renderer.h>
-#include <SimpleVT.h>
-#include <geGL/geGL.h>
-#include <geCore/Text.h>
-#include <memory>
-#include <geUtil/OrbitCamera.h>
-#include <geUtil/PerspectiveCamera.h>
-#include <glsg/GLSceneProcessor.h>
-#include <QtImageLoader.h>
+
 #include <iostream>
+
+#include <sg/AnimationManager.h>
 #include <sg/CubeMapTexture.h>
 #include <sg/AnimationManager.h>
 #include <glsg/TextureFactory.h>
-#include <geSG/Material.h>
-#include <sg/AnimationManager.h>
+#include <glsg/GLSceneProcessor.h>
 
+#include <geGL/geGL.h>
+#include <geSG/Material.h>
+#include <geCore/Text.h>
+#include <geUtil/OrbitCamera.h>
+#include <geUtil/PerspectiveCamera.h>
+
+#include <QtImageLoader.h>
+#include <SimpleVT.h>
+#include <LaserManager.h>
 #include <skybox/SkyboxVT.h>
 #include <Effects/laser/LaserVT.h>
-#include <LaserManager.h>
-
+#include <ShieldManager.h>
 
 msg::Renderer::Renderer(QObject *parent) :
     GERendererBase(parent),
@@ -32,6 +34,7 @@ msg::Renderer::Renderer(QObject *parent) :
     _laserVT(std::make_shared<msg::LaserVT>()),
     _animationManager(std::make_shared<msg::AnimationManager>()),
     _laserManager(std::make_shared<msg::LaserManager>()),
+    _shieldManager(std::make_shared<msg::ShieldManager>()),
     _stopwatch(std::make_shared<app::util::Stopwatch<double>>())
 {
     std::cout << "Renderer ctor" << std::endl;
@@ -79,7 +82,6 @@ void msg::Renderer::update() {
     *_time = _stopwatch->getTime();
     _animationManager->update(std::chrono::duration<double>(*_time));
     
-
     if (_sceneToProcess) {
         std::cout << "Scene Processing" << std::endl;
         _glScene = ge::glsg::GLSceneProcessor::processScene(_scene,_gl);
@@ -104,6 +106,8 @@ void msg::Renderer::update() {
                 2.0f
             )
         );
+
+        _shieldManager->addShield(glm::vec3(0), 3.7f);
         _laserManager->addMissile(l);
         _laserManager->addMissile(l1);
         _laserVT->lasers = _laserManager->missiles;

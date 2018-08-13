@@ -47,6 +47,7 @@ set(GRAPHICS_FILES
     src/graphics/SimpleVT.cpp src/graphics/SimpleVT.h
     src/graphics/skybox/SkyboxVT.h src/graphics/skybox/SkyboxVT.cpp
     src/graphics/LaserManager.h src/graphics/LaserManager.cpp
+    src/graphics/ShieldManager.h src/graphics/ShieldManager.cpp
 )
 
 set(UTIL_FILES
