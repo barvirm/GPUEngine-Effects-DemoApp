@@ -125,11 +125,11 @@ void msg::Renderer::update() {
         auto cb1 = [](){std::cout << "Hello world1" << std::endl;};
         auto cb2 = [](){std::cout << "Hello world2" << std::endl;};
         auto cb3 = [](){std::cout << "Hello world3" << std::endl;};
-        std::shared_ptr<msg::AnimationCallback> event1(std::make_shared<msg::AnimationEvent<std::function<void(void)>>>(cb1));
-        std::shared_ptr<msg::AnimationCallback> event2(std::make_shared<msg::AnimationEvent<std::function<void(void)>>>(cb2));
-        std::shared_ptr<msg::AnimationCallback> event3(std::make_shared<msg::AnimationEvent<std::function<void(void)>>>(cb2));
- 
-        std::shared_ptr<msg::AnimationEventChannel> aech(std::make_shared<msg::AnimationEventChannel>());
+        auto event1 = AnimationEventFactory::create(cb1);
+        auto event2 = AnimationEventFactory::create(cb2);
+        auto event3 = AnimationEventFactory::create(cb3);
+        auto aech(std::make_shared<msg::AnimationEventChannel>());
+
         anim->channels.push_back(aech);
         aech->KF.emplace_back(ge::core::time_point(std::chrono::seconds(1)), event1);
         aech->KF.emplace_back(ge::core::time_point(std::chrono::seconds(2)), event2);
