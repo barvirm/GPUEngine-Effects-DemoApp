@@ -58,6 +58,8 @@ set(SG_FILES
     src/sg/CubeMapTexture.cpp src/sg/CubeMapTexture.h
     src/sg/AnimationManager.cpp src/sg/AnimationManager.h
     src/sg/AnimationChannel.h
+    src/sg/AnimationEvent.h
+    src/sg/AnimationEventChannel.cpp src/sg/AnimationEventChannel.h
 )
 
 source_group(glsg FILES ${GLSG_FILES})

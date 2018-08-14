@@ -5,6 +5,8 @@
 #include <sg/AnimationManager.h>
 #include <sg/CubeMapTexture.h>
 #include <sg/AnimationManager.h>
+#include <sg/AnimationChannel.h>
+#include <sg/AnimationEventChannel.h>
 #include <glsg/TextureFactory.h>
 #include <glsg/GLSceneProcessor.h>
 
@@ -113,10 +115,32 @@ void msg::Renderer::update() {
         _laserManager->addMissile(l);
         _laserManager->addMissile(l1);
         _laserVT->lasers = _laserManager->missiles;
+        
+        test = std::make_shared<float>(0.0f);
+        std::shared_ptr<ge::sg::Animation> anim(std::make_shared<ge::sg::Animation>());
+        std::shared_ptr<msg::AnimationChannel<float>> mvch = std::make_shared<msg::AnimationChannel<float>>();
+        mvch->setTarget(test);
+        anim->channels.push_back(mvch);
+
+        auto cb1 = [](){std::cout << "Hello world1" << std::endl;};
+        auto cb2 = [](){std::cout << "Hello world2" << std::endl;};
+        auto cb3 = [](){std::cout << "Hello world3" << std::endl;};
+        std::shared_ptr<msg::AnimationCallback> event1(std::make_shared<msg::AnimationEvent<std::function<void(void)>>>(cb1));
+        std::shared_ptr<msg::AnimationCallback> event2(std::make_shared<msg::AnimationEvent<std::function<void(void)>>>(cb2));
+        std::shared_ptr<msg::AnimationCallback> event3(std::make_shared<msg::AnimationEvent<std::function<void(void)>>>(cb2));
+ 
+        std::shared_ptr<msg::AnimationEventChannel> aech(std::make_shared<msg::AnimationEventChannel>());
+        anim->channels.push_back(aech);
+        aech->KF.emplace_back(ge::core::time_point(std::chrono::seconds(1)), event1);
+        aech->KF.emplace_back(ge::core::time_point(std::chrono::seconds(2)), event2);
+        aech->KF.emplace_back(ge::core::time_point(std::chrono::seconds(3)), event3);
+        auto now(std::chrono::duration<double>(*_time.get()));
+        _animationManager->playAnimation(anim, now);
     }
     _laserManager->update();
     _laserVT->update();
     _shieldVT->update();
+    //std::cout << *test << std::endl;
 
     auto projectionMatrix = perspectiveCamera->getProjection();
     auto viewMatrix = orbitCamera->getView();

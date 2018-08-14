@@ -58,6 +58,7 @@ namespace msg {
         std::shared_ptr<msg::AnimationManager> _animationManager;
         std::shared_ptr<msg::LaserManager> _laserManager;
         std::shared_ptr<msg::ShieldManager> _shieldManager;
+        std::shared_ptr<float> test;
 
     private:
         void setupCamera();

@@ -8,6 +8,7 @@ namespace msg {
     class AnimationChannel : public ge::sg::AnimationChannel {
     public:
         using KeyFrame = ge::sg::AnimationKeyFrameTemplate<T>;
+        using Interpolator = ge::sg::KeyframeInterpolator<std::vector<KeyFrame>>;
         AnimationChannel();
         ~AnimationChannel() override = default;
 
@@ -20,7 +21,7 @@ namespace msg {
 
     public:
         std::vector<KeyFrame> KF;
-        std::unique_ptr<ge::sg::KeyframeInterpolator<std::vector<KeyFrame>>> interpolator;
+        std::unique_ptr<Interpolator> interpolator;
 
     protected:
         std::shared_ptr<T> _target;
@@ -38,10 +39,9 @@ namespace msg {
     template<class T>
     void AnimationChannel<T>::update(const ge::core::time_point &t) {
         T p = interpolator->interpolate(KF, ge::core::TPtoFP(t));
+
         if (_target) {
             *_target = p;
         }
     }
 }
-
-
