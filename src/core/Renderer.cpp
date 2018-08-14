@@ -5,8 +5,6 @@
 #include <sg/AnimationManager.h>
 #include <sg/CubeMapTexture.h>
 #include <sg/AnimationManager.h>
-#include <sg/AnimationChannel.h>
-#include <sg/AnimationEventChannel.h>
 #include <glsg/TextureFactory.h>
 #include <glsg/GLSceneProcessor.h>
 
@@ -46,6 +44,7 @@ msg::Renderer::Renderer(QObject *parent) :
     setupCamera();
     _laserManager->animationManager = _animationManager;
     _laserManager->time = _time;
+    _laserManager->orbitCamera = orbitCamera;
 }
 
 void msg::Renderer::onViewportChanged() {
@@ -93,7 +92,6 @@ void msg::Renderer::update() {
         _simpleVT->processScene();
         _sceneToProcess = false;
 
-        _laserManager->orbitCamera = orbitCamera;
         auto l(
             std::make_shared<msg::Laser>(
                 glm::vec3(0.f,0.f,8.f),
@@ -115,27 +113,6 @@ void msg::Renderer::update() {
         _laserManager->addMissile(l);
         _laserManager->addMissile(l1);
         _laserVT->lasers = _laserManager->missiles;
-        
-        test = std::make_shared<float>(0.0f);
-        std::shared_ptr<ge::sg::Animation> anim(std::make_shared<ge::sg::Animation>());
-        std::shared_ptr<msg::AnimationChannel<float>> mvch = std::make_shared<msg::AnimationChannel<float>>();
-        mvch->setTarget(test);
-        anim->channels.push_back(mvch);
-
-        auto cb1 = [](){std::cout << "Hello world1" << std::endl;};
-        auto cb2 = [](){std::cout << "Hello world2" << std::endl;};
-        auto cb3 = [](){std::cout << "Hello world3" << std::endl;};
-        auto event1 = AnimationEventFactory::create(cb1);
-        auto event2 = AnimationEventFactory::create(cb2);
-        auto event3 = AnimationEventFactory::create(cb3);
-        auto aech(std::make_shared<msg::AnimationEventChannel>());
-
-        anim->channels.push_back(aech);
-        aech->KF.emplace_back(ge::core::time_point(std::chrono::seconds(1)), event1);
-        aech->KF.emplace_back(ge::core::time_point(std::chrono::seconds(2)), event2);
-        aech->KF.emplace_back(ge::core::time_point(std::chrono::seconds(3)), event3);
-        auto now(std::chrono::duration<double>(*_time.get()));
-        _animationManager->playAnimation(anim, now);
     }
     _laserManager->update();
     _laserVT->update();
@@ -252,10 +229,9 @@ bool msg::Renderer::initSkyboxVT() {
     _skyboxVT->orbitCamera = orbitCamera;
     _skyboxVT->viewport = _viewport;
 
-
     QtImageLoaderWrapper loader;
     CubeMapTextureFactory::dir = APP_RESOURCES"/texture/skybox/";
-    std::shared_ptr<msg::CubeMapTexture> cubeMap = msg::CubeMapTextureFactory::create("right_1.png","left.png","top.png","down.png","center.png","right_2.png", loader);
+    auto cubeMap = msg::CubeMapTextureFactory::create("right_1.png","left.png","top.png","down.png","center.png","right_2.png", loader);
     cubeMap->gl = _gl;
     cubeMap->initTexture();
     _skyboxVT->cubeMap = cubeMap;
