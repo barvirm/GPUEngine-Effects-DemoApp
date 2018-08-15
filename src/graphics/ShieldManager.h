@@ -1,8 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <glm/vec3.hpp> // TODO FWD
-#include <glm/mat4x4.hpp> // TODO FWD
+#include <glm/fwd.hpp>
 #include <vector>
 
 

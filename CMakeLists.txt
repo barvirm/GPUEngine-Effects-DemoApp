@@ -53,6 +53,7 @@ set(GRAPHICS_FILES
 set(UTIL_FILES
     src/util/MouseEventHandler.cpp src/util/MouseEventHandler.h
     src/util/Stopwatch.h
+    src/util/Algorithm.h
 )
 set(SG_FILES
     src/sg/CubeMapTexture.cpp src/sg/CubeMapTexture.h

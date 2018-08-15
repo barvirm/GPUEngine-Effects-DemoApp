@@ -2,6 +2,8 @@
 #include <Effects/shield/Shield.h>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 void msg::ShieldManager::addShield(glm::vec3 center, float radius) {
     std::shared_ptr<glm::mat4> m = std::make_shared<glm::mat4>(

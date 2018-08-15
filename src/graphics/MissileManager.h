@@ -26,7 +26,6 @@ namespace msg {
         std::shared_ptr<double> time;
 
         std::unordered_map<T *, std::shared_ptr<ge::sg::Animation>> ShootingAnimationMap;
-        std::unordered_map<T *, std::shared_ptr<ge::sg::Animation>> FinishAnimation;
     protected:
         virtual void getShotingAnimation(std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
         virtual void getFinishAnimation (std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
@@ -58,7 +57,6 @@ namespace msg {
     void MissileManager<T>::startHitAnimation(std::shared_ptr<T> &missile) {
         std::shared_ptr<ge::sg::Animation> animation;
         getFinishAnimation(missile, animation);
-        FinishAnimation[missile.get()] = animation;
         auto now(std::chrono::duration<double>(*time.get()));
         animationManager->playAnimation(animation, now);
     }
