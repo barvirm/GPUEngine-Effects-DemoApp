@@ -3,13 +3,10 @@
 //
 
 #include <LaserManager.h>
-#include <geCore/Updatable.h>
 #include <geSG/AnimationChannel.h>
 #include <sg/AnimationChannel.h>
 #include <util/Algorithm.h>
 #include <geUtil/OrbitCamera.h>
-#include <glm/gtx/rotate_vector.hpp>
-#include <glm/gtx/string_cast.hpp>
 #include <sg/AnimationEventChannel.h>
 
 
@@ -29,6 +26,7 @@ void msg::LaserManager::update() {
     auto predicate_wrapper_vector = [&predicate](auto &l) {
         return predicate(l->getBegin());
     };
+
     ste::unordered_map_erase_if(ShootingAnimationMap, predicate_wrapper_map);
     missiles->erase(std::remove_if(missiles->begin(), missiles->end(), predicate_wrapper_vector), missiles->end());
 }
@@ -60,8 +58,8 @@ void msg::LaserManager::getFinishAnimation(std::shared_ptr<Laser> &missile, std:
     auto animationEvent = msg::AnimationEventFactory::create(event);
     evch->KF.emplace_back(ge::core::time_point(0.2s), animationEvent);
 
-    anim->channels.push_back(evch);
-    anim->channels.push_back(mvch);
+    anim->channels.emplace_back(evch);
+    anim->channels.emplace_back(mvch);
     animation = anim;
 }
 
