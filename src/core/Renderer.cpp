@@ -92,27 +92,9 @@ void msg::Renderer::update() {
         _simpleVT->processScene();
         _sceneToProcess = false;
 
-        auto l(
-            std::make_shared<msg::Laser>(
-                glm::vec3(0.f,0.f,8.f),
-                glm::vec3(0.f,0.f,15.f),
-                glm::vec4(0.f,0.f,1.f,1.f),
-                2.0f
-            )
-        );
-        auto l1(
-            std::make_shared<msg::Laser>(
-                glm::vec3(1.f,0.f,15.f),
-                glm::vec3(1.f,0.f,8.f),
-                glm::vec4(0.f,0.f,1.f,1.f),
-                2.0f
-            )
-        );
-
         _shieldManager->addShield(glm::vec3(0), 3.7f);
-        _laserManager->addMissile(l);
-        _laserManager->addMissile(l1);
-        _laserVT->lasers = _laserManager->missiles;
+        _laserManager->addLaser({0, 0, 8 }, {0, 0, 15}, {0, 0, 1, 1}, 2);
+        _laserManager->addLaser({1, 0, 15}, {1, 0,  8}, {0, 0, 1, 1}, 2);
     }
     _laserManager->update();
     _laserVT->update();
@@ -128,7 +110,7 @@ void msg::Renderer::update() {
     glm::vec3 CP = static_cast<glm::vec3>(glm::inverse(viewMatrix)[3]);
     glm::vec4 WP(-_viewport->x * 0.5f, -_viewport->y * 0.5f, _viewport->x, _viewport->y);
     glm::mat4 OP = glm::ortho(-_viewport->x * 0.5f, _viewport->x * 0.5f, -_viewport->y * 0.5f, _viewport->y * 0.5f, -1.0f, 1.0f);
-    glm::mat4 OW = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 1.0f, 0.0));
+    glm::mat4 OW = glm::lookAt(glm::vec3(0), glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 1.0f, 0.0));
 
     _laserVT->program->set4fv("viewport", glm::value_ptr(WP));
     _laserVT->program->set3fv("_cameraPosition", glm::value_ptr(CP));
@@ -148,7 +130,7 @@ void msg::Renderer::setupCamera() {
     orbitCamera->setDistance(20.f);
     orbitCamera->setYAngle(3.1415f/1.2f);
     orbitCamera->setXAngle(3.1415f/6.5f);
-    orbitCamera->setFocus(glm::vec3(0,0,0));
+    orbitCamera->setFocus(glm::vec3(0));
 
     perspectiveCamera->setNear(0.1f);
     perspectiveCamera->setFar(5000.0f);
@@ -183,6 +165,7 @@ bool msg::Renderer::initLaserVT() {
     _laserVT->gl = _gl;
     _laserVT->program = program;
     _laserVT->orbitCamera = orbitCamera;
+    _laserVT->lasers = _laserManager->missiles;
 
     std::string imagePath(APP_RESOURCES"/texture/laserbolt.png");
     std::shared_ptr<QtImage> image(QtImageLoader::loadImage(imagePath.c_str()));
@@ -195,6 +178,7 @@ bool msg::Renderer::initLaserVT() {
 
     std::shared_ptr<ge::glsg::TextureFactory> textureFactory(std::make_shared<ge::glsg::DefaultTextureFactory>());
     _laserVT->texture = textureFactory->create(materialComponent.get(), _gl);
+    
     return true;
 }
 
@@ -238,6 +222,7 @@ bool msg::Renderer::initSkyboxVT() {
 
     return true;
 }
+
 bool msg::Renderer::initVT() {
     std::cout << "Renderer initVT" << std::endl;
     bool i = true;
@@ -249,7 +234,6 @@ bool msg::Renderer::initVT() {
     
     return i;
 }
-
 
 void msg::Renderer::drawVT() {
     //std::cout << "Renderer drawVT" << std::endl;

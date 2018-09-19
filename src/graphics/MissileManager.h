@@ -16,7 +16,6 @@ namespace msg {
     class MissileManager {
     public:
         MissileManager();
-        void addMissile(std::shared_ptr<T> &missile);
         void stopAnimation(std::shared_ptr<T> &missile);
         void startHitAnimation(std::shared_ptr<T> &missile);
         virtual void update() = 0;
@@ -27,6 +26,7 @@ namespace msg {
 
         std::unordered_map<T *, std::shared_ptr<ge::sg::Animation>> ShootingAnimationMap;
     protected:
+        void addMissile(std::shared_ptr<T> &missile);
         virtual void getShotingAnimation(std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
         virtual void getFinishAnimation (std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
 
