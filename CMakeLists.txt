@@ -63,20 +63,26 @@ set(SG_FILES
     src/sg/AnimationEventChannel.cpp src/sg/AnimationEventChannel.h
 )
 
+set(INTERSECTORS_FILES
+    src/intersectors/LineSphereIntersector.cpp src/intersectors/LineSphereIntersector.h
+)
+
 source_group(glsg FILES ${GLSG_FILES})
 source_group(util FILES ${UTIL_FILES})
 source_group(core FILES ${CORE_FILES})
 source_group(sg FILES ${SG_FILES})
 source_group(graphics FILES ${GRAPHICS_FILES})
+source_group(intersectors FILES ${INTERSECTORS_FILES})
 
 
-add_executable(${APP_NAME} ${CORE_FILES} ${GLSG_FILES} ${GRAPHICS_FILES} ${UTIL_FILES} ${SG_FILES})
+add_executable(${APP_NAME} ${CORE_FILES} ${GLSG_FILES} ${GRAPHICS_FILES} ${UTIL_FILES} ${SG_FILES} ${INTERSECTORS_FILES})
 target_link_libraries(${APP_NAME} Qt5::Quick Qt5::Widgets Effects geGL geSG geUtil AssimpModelLoader QtImageLoader)
 
 target_include_directories(${APP_NAME} PUBLIC "src/")
 target_include_directories(${APP_NAME} PUBLIC "src/core")
 target_include_directories(${APP_NAME} PUBLIC "src/graphics")
 target_include_directories(${APP_NAME} PUBLIC "src/util")
+target_include_directories(${APP_NAME} PUBLIC "src/intersectors")
 
 set_target_properties(${APP_NAME} PROPERTIES COMPILE_DEFINITIONS "APP_RESOURCES=\"${${APP_NAME}_RESOURCES}\"")
 set_property(TARGET ${APP_NAME} PROPERTY FOLDER "${examples_folder_name}")
