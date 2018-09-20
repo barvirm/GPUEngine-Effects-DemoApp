@@ -13,10 +13,10 @@
 using namespace std::chrono_literals;
 
 void msg::LaserManager::update() {
-
+    std::cout << ShootingAnimationMap.size() << std::endl;
 }
 
-void msg::LaserManager::getShotingAnimation(std::shared_ptr<msg::Laser> &missile, std::shared_ptr<ge::sg::Animation> &animation) {
+void msg::LaserManager::getShotingAnimation(const std::shared_ptr<msg::Laser> &missile, std::shared_ptr<ge::sg::Animation> &animation) {
     auto anim(std::make_shared<ge::sg::Animation>());
     auto mvch(std::make_shared<ge::sg::MovementAnimationChannel>());
     auto evch(std::make_shared<msg::AnimationEventChannel>());
@@ -25,7 +25,11 @@ void msg::LaserManager::getShotingAnimation(std::shared_ptr<msg::Laser> &missile
     mvch->positionKF.emplace_back(ge::core::time_point(20s), missile->getDirection() * 200.0f);
     mvch->setTarget(missile->getMatrix());
 
-    auto event = [this, &missile] { ste::vector_erase(*missiles, missile); };
+    auto event = [this, missile] {
+        ste::vector_erase(*missiles, missile);
+        ShootingAnimationMap.erase( missile.get() );
+    };
+
     auto animationEvent = msg::AnimationEventFactory::create(event);
     evch->KF.emplace_back(ge::core::time_point(20s), animationEvent);
 
@@ -34,7 +38,7 @@ void msg::LaserManager::getShotingAnimation(std::shared_ptr<msg::Laser> &missile
     animation = anim;
 }
 
-void msg::LaserManager::getFinishAnimation(std::shared_ptr<Laser> &missile, std::shared_ptr<ge::sg::Animation> &animation) {
+void msg::LaserManager::getFinishAnimation(const std::shared_ptr<msg::Laser> &missile, std::shared_ptr<ge::sg::Animation> &animation) {
     auto anim(std::make_shared<ge::sg::Animation>());
     auto mvch(std::make_shared<msg::AnimationChannel<glm::vec3>>());
     auto evch(std::make_shared<msg::AnimationEventChannel>());
@@ -43,10 +47,12 @@ void msg::LaserManager::getFinishAnimation(std::shared_ptr<Laser> &missile, std:
     mvch->KF.emplace_back(ge::core::time_point(0.2s), missile->getEnd());
     mvch->setTarget(missile->getBeginPtr());
 
-    auto event = [this, &missile] { 
-        missiles->erase(std::remove(missiles->begin(), missiles->end(), missile));
-        
+    auto event = [this, missile] { 
+        ste::vector_erase(*missiles, missile);
+        ShootingAnimationMap.erase(missile.get());
+        FinishAnimationMap.erase(missile.get());
     };
+
     auto animationEvent = msg::AnimationEventFactory::create(event);
     evch->KF.emplace_back(ge::core::time_point(0.2s), animationEvent);
 

@@ -18,8 +18,8 @@ namespace msg {
         std::shared_ptr<ge::util::OrbitCamera> orbitCamera;
         protected:
 
-        virtual void getShotingAnimation(std::shared_ptr<msg::Laser> &missile, std::shared_ptr<ge::sg::Animation> &animation) override;
-        virtual void getFinishAnimation (std::shared_ptr<msg::Laser> &missile, std::shared_ptr<ge::sg::Animation> &animation) override;
+        virtual void getShotingAnimation(const std::shared_ptr<msg::Laser> &missile, std::shared_ptr<ge::sg::Animation> &animation) override;
+        virtual void getFinishAnimation (const std::shared_ptr<msg::Laser> &missile, std::shared_ptr<ge::sg::Animation> &animation) override;
     };
 
 }
