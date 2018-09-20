@@ -16,8 +16,8 @@ namespace msg {
     class MissileManager {
     public:
         MissileManager();
-        void stopAnimation(std::shared_ptr<T> &missile);
-        void startHitAnimation(std::shared_ptr<T> &missile);
+        void stopAnimation(const std::shared_ptr<T> &missile);
+        void startHitAnimation(const std::shared_ptr<T> &missile);
         virtual void update() = 0;
 
         std::shared_ptr<msg::AnimationManager> animationManager;
@@ -25,10 +25,11 @@ namespace msg {
         std::shared_ptr<double> time;
 
         std::unordered_map<T *, std::shared_ptr<ge::sg::Animation>> ShootingAnimationMap;
+        std::unordered_map<T *, std::shared_ptr<ge::sg::Animation>> FinishAnimationMap;
     protected:
         void addMissile(std::shared_ptr<T> &missile);
-        virtual void getShotingAnimation(std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
-        virtual void getFinishAnimation (std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
+        virtual void getShotingAnimation(const std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
+        virtual void getFinishAnimation (const std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
 
 
     };
@@ -49,14 +50,15 @@ namespace msg {
     }
 
     template<class T>
-    void MissileManager<T>::stopAnimation(std::shared_ptr<T> &missile) {
+    void MissileManager<T>::stopAnimation(const std::shared_ptr<T> &missile) {
         animationManager->removeAnimation(ShootingAnimationMap[missile.get()]);
     }
 
     template<class T>
-    void MissileManager<T>::startHitAnimation(std::shared_ptr<T> &missile) {
+    void MissileManager<T>::startHitAnimation(const std::shared_ptr<T> &missile) {
         std::shared_ptr<ge::sg::Animation> animation;
         getFinishAnimation(missile, animation);
+        FinishAnimationMap[missile.get()] = animation;
         auto now(std::chrono::duration<double>(*time.get()));
         animationManager->playAnimation(animation, now);
     }

@@ -99,7 +99,7 @@ void msg::Renderer::update() {
     _laserManager->update();
     _laserVT->update();
     _shieldVT->update();
-    //std::cout << *test << std::endl;
+    //std::cout << *_time << std::endl;
 
     auto projectionMatrix = perspectiveCamera->getProjection();
     auto viewMatrix = orbitCamera->getView();
@@ -222,7 +222,6 @@ bool msg::Renderer::initSkyboxVT() {
 
     return true;
 }
-
 bool msg::Renderer::initVT() {
     std::cout << "Renderer initVT" << std::endl;
     bool i = true;
@@ -234,6 +233,7 @@ bool msg::Renderer::initVT() {
     
     return i;
 }
+
 
 void msg::Renderer::drawVT() {
     //std::cout << "Renderer drawVT" << std::endl;
