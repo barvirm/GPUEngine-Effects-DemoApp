@@ -52,6 +52,8 @@ set(GRAPHICS_FILES
 
 set(UTIL_FILES
     src/util/MouseEventHandler.cpp src/util/MouseEventHandler.h
+    src/util/intersectors/LineSphereIntersector.cpp src/util/intersectors/LineSphereIntersector.h
+    src/util/collision/LaserShieldCollision.cpp src/util/collision/LaserShieldCollision.h
     src/util/Stopwatch.h
     src/util/Algorithm.h
 )
@@ -64,7 +66,7 @@ set(SG_FILES
 )
 
 set(INTERSECTORS_FILES
-    src/intersectors/LineSphereIntersector.cpp src/intersectors/LineSphereIntersector.h
+    
 )
 
 source_group(glsg FILES ${GLSG_FILES})
@@ -82,7 +84,6 @@ target_include_directories(${APP_NAME} PUBLIC "src/")
 target_include_directories(${APP_NAME} PUBLIC "src/core")
 target_include_directories(${APP_NAME} PUBLIC "src/graphics")
 target_include_directories(${APP_NAME} PUBLIC "src/util")
-target_include_directories(${APP_NAME} PUBLIC "src/intersectors")
 
 set_target_properties(${APP_NAME} PROPERTIES COMPILE_DEFINITIONS "APP_RESOURCES=\"${${APP_NAME}_RESOURCES}\"")
 set_property(TARGET ${APP_NAME} PROPERTY FOLDER "${examples_folder_name}")
