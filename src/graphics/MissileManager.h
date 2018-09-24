@@ -16,7 +16,7 @@ namespace msg {
     class MissileManager {
     public:
         MissileManager();
-        void stopAnimation(const std::shared_ptr<T> &missile);
+        void stopAnimation(const std::shared_ptr<const T> &missile);
         void startHitAnimation(const std::shared_ptr<T> &missile);
         virtual void update() = 0;
 
@@ -24,8 +24,8 @@ namespace msg {
         std::shared_ptr<std::vector<std::shared_ptr<T>>> missiles;
         std::shared_ptr<double> time;
 
-        std::unordered_map<T *, std::shared_ptr<ge::sg::Animation>> ShootingAnimationMap;
-        std::unordered_map<T *, std::shared_ptr<ge::sg::Animation>> FinishAnimationMap;
+        std::unordered_map<const T *, std::shared_ptr<ge::sg::Animation>> ShootingAnimationMap;
+        std::unordered_map<const T *, std::shared_ptr<ge::sg::Animation>> FinishAnimationMap;
     protected:
         void addMissile(std::shared_ptr<T> &missile);
         virtual void getShotingAnimation(const std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
@@ -50,7 +50,7 @@ namespace msg {
     }
 
     template<class T>
-    void MissileManager<T>::stopAnimation(const std::shared_ptr<T> &missile) {
+    void MissileManager<T>::stopAnimation(const std::shared_ptr<const T> &missile) {
         animationManager->removeAnimation(ShootingAnimationMap[missile.get()]);
     }
 
