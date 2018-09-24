@@ -1,7 +1,7 @@
 #pragma once
 
 namespace msg {
-    class Collision {
+    class Collider {
         public:
             virtual void update() = 0;
     };

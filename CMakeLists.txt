@@ -7,7 +7,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -53,9 +53,10 @@ set(GRAPHICS_FILES
 set(UTIL_FILES
     src/util/MouseEventHandler.cpp src/util/MouseEventHandler.h
     src/util/intersectors/LineSphereIntersector.cpp src/util/intersectors/LineSphereIntersector.h
-    src/util/collision/LaserShieldCollision.cpp src/util/collision/LaserShieldCollision.h
+    src/util/collision/LaserShieldCollider.cpp src/util/collision/LaserShieldCollider.h
     src/util/Stopwatch.h
     src/util/Algorithm.h
+    src/util/collision/Collider.h
 )
 set(SG_FILES
     src/sg/CubeMapTexture.cpp src/sg/CubeMapTexture.h

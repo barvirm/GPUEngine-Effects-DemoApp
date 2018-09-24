@@ -22,6 +22,8 @@
 #include <Effects/shield/ShieldVT.h>
 #include <ShieldManager.h>
 
+#include <util/collision/LaserShieldCollider.h>
+
 msg::Renderer::Renderer(QObject *parent) :
     GERendererBase(parent),
     orbitCamera(std::make_shared<ge::util::OrbitCamera>()),
@@ -45,6 +47,8 @@ msg::Renderer::Renderer(QObject *parent) :
     _laserManager->animationManager = _animationManager;
     _laserManager->time = _time;
     _laserManager->orbitCamera = orbitCamera;
+    _shieldManager->animationManager = _animationManager;
+    _shieldManager->time = _time;
 }
 
 void msg::Renderer::onViewportChanged() {
@@ -55,6 +59,12 @@ void msg::Renderer::onViewportChanged() {
 
 void msg::Renderer::onContextCreated() {
     initVT();
+    initColliders();
+}
+
+void msg::Renderer::initColliders() {
+    std::cout << "Init Colliders" << std::endl;
+    _colliders.emplace_back(std::make_unique<msg::LaserShieldCollider>(_laserManager, _shieldManager));
 }
 
 void msg::Renderer::setupGLState() {
@@ -94,9 +104,10 @@ void msg::Renderer::update() {
 
         _shieldManager->addShield(glm::vec3(0), 3.7f);
         _laserManager->addLaser({0, 0, 8 }, {0, 0, 15}, {0, 0, 1, 1}, 2);
-        _laserManager->addLaser({1, 0, 15}, {1, 0,  8}, {0, 0, 1, 1}, 2);
+        _laserManager->addLaser({1, 1, 25}, {1, 1, 18}, {0, 0, 1, 1}, 2);
     }
     _laserManager->update();
+    std::for_each(begin(_colliders), end(_colliders), [](auto &c) {c->update();});
     _laserVT->update();
     _shieldVT->update();
     //std::cout << *_time << std::endl;
@@ -222,6 +233,7 @@ bool msg::Renderer::initSkyboxVT() {
 
     return true;
 }
+
 bool msg::Renderer::initVT() {
     std::cout << "Renderer initVT" << std::endl;
     bool i = true;
@@ -233,7 +245,6 @@ bool msg::Renderer::initVT() {
     
     return i;
 }
-
 
 void msg::Renderer::drawVT() {
     //std::cout << "Renderer drawVT" << std::endl;

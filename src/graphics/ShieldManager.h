@@ -19,7 +19,7 @@ namespace msg {
 
             void addShield(glm::vec3 center, float radius);
             void addPulseWave(msg::Shield &shield, glm::vec3 origin);
-            void addIntersection(msg::Shield &shield, glm::vec3 origin, ge::core::time_point &t);
+            void addIntersection(msg::Shield &shield, glm::vec3 origin);
             
             std::shared_ptr<std::vector<msg::Shield>> shields;
             std::shared_ptr<msg::AnimationManager> animationManager;

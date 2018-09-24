@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Collision.h"
+#include "Collider.h"
 #include <memory>
 #include <vector>
 
@@ -10,9 +10,9 @@ namespace msg {
 }
 
 namespace msg {
-    class LaserShieldCollision : public Collision {
+    class LaserShieldCollider : public msg::Collider {
     public:
-        LaserShieldCollision(std::shared_ptr<msg::LaserManager> &l, std::shared_ptr<msg::ShieldManager> &s) :
+        LaserShieldCollider(std::shared_ptr<msg::LaserManager> &l, std::shared_ptr<msg::ShieldManager> &s) :
             laserManager(l),
             shieldManager(s)
         {}

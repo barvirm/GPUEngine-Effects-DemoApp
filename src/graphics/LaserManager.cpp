@@ -13,7 +13,7 @@
 using namespace std::chrono_literals;
 
 void msg::LaserManager::update() {
-    std::cout << ShootingAnimationMap.size() << std::endl;
+    //std::cout << ShootingAnimationMap.size() << std::endl;
 }
 
 void msg::LaserManager::getShotingAnimation(const std::shared_ptr<msg::Laser> &missile, std::shared_ptr<ge::sg::Animation> &animation) {

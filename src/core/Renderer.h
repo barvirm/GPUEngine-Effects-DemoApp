@@ -2,6 +2,7 @@
 
 #include <GERendererBase.h>
 #include <util/Stopwatch.h>
+#include <util/collision/Collider.h>
 
 namespace ge {
     namespace util {
@@ -58,7 +59,7 @@ namespace msg {
         std::shared_ptr<msg::AnimationManager> _animationManager;
         std::shared_ptr<msg::LaserManager> _laserManager;
         std::shared_ptr<msg::ShieldManager> _shieldManager;
-        std::shared_ptr<float> test;
+        std::vector<std::unique_ptr<msg::Collider>> _colliders;
 
     private:
         void setupCamera();
@@ -69,5 +70,6 @@ namespace msg {
         bool initTestVT();
         bool initShieldVT();
         void drawVT();
+        void initColliders();
     };
 }
