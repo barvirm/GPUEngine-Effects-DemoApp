@@ -4,7 +4,6 @@ uniform mat4 u_Projection;
 uniform mat4 u_View;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform mat4 modelMatrix;
 uniform vec4 viewport;
 uniform vec3 _cameraPosition;
 
