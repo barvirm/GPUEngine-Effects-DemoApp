@@ -22,3 +22,10 @@ namespace ste {
         v.erase(std::remove(begin(v), end(v), item));
     }
 }
+
+namespace stdr {
+    template<class _Collection, class UnaryFunction> 
+    UnaryFunction for_each(_Collection c, UnaryFunction f) {
+        std::for_each(begin(c), end(c), f);
+    }
+}
