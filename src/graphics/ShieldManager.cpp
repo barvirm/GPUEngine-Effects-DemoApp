@@ -29,7 +29,7 @@ msg::ShieldManager::ShieldManager() {
     shields = std::make_shared<std::vector<msg::Shield>>();
 }
 
-void msg::ShieldManager::addPulseWave(msg::Shield &shield, glm::vec3 origin) {
+void msg::ShieldManager::addPulseWave(msg::Shield &shield, glm::vec3 origin, const ge::core::time_point &t) {
     using namespace std::chrono_literals;
     msg::PulseWave pulseWave(0, origin);
 
@@ -41,14 +41,14 @@ void msg::ShieldManager::addPulseWave(msg::Shield &shield, glm::vec3 origin) {
     anim->channels.push_back(floatChannel);
 
     floatChannel->KF.emplace_back(0s, 0);
-    floatChannel->KF.emplace_back(3s, 1);
+    floatChannel->KF.emplace_back(t, 1);
     shield.addPulseWave(pulseWave);
 
     animationManager->playAnimation(anim, ge::core::time_point(std::chrono::duration<double>(*time.get())));
 
 }
 
-void msg::ShieldManager::addIntersection(msg::Shield &shield, glm::vec3 origin) {
+void msg::ShieldManager::addIntersection(msg::Shield &shield, glm::vec3 origin, const ge::core::time_point &t) {
     using namespace std::chrono_literals;
     msg::Intersection intersection(origin);
 
@@ -59,7 +59,7 @@ void msg::ShieldManager::addIntersection(msg::Shield &shield, glm::vec3 origin) 
     anim->channels.push_back(floatChannel);
 
     floatChannel->KF.emplace_back(0s, 0.0f);
-    floatChannel->KF.emplace_back(0.5s, 1.0f);
+    floatChannel->KF.emplace_back(t, 1.0f);
 
     shield.addIntersection(intersection);
     animationManager->playAnimation(anim, ge::core::time_point(std::chrono::duration<double>(*time.get())));
