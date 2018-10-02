@@ -22,8 +22,8 @@ void msg::LaserManager::getShotingAnimation(const std::shared_ptr<msg::Laser> &m
     auto evch(std::make_shared<msg::AnimationEventChannel>());
 
     mvch->positionKF.emplace_back(ge::core::time_point(0s) , glm::vec3(0));
-    mvch->positionKF.emplace_back(ge::core::time_point(20s), missile->getDirection() * 200.0f);
-    mvch->setTarget(missile->getMatrix());
+    mvch->positionKF.emplace_back(ge::core::time_point(20s), missile->direction() * 200.0f);
+    mvch->setTarget(missile->matrix());
 
     auto event = [this, missile] {
         ste::vector_erase(*missiles, missile);
@@ -43,9 +43,9 @@ void msg::LaserManager::getFinishAnimation(const std::shared_ptr<msg::Laser> &mi
     auto mvch(std::make_shared<msg::AnimationChannel<glm::vec3>>());
     auto evch(std::make_shared<msg::AnimationEventChannel>());
 
-    mvch->KF.emplace_back(ge::core::time_point(0s)  , missile->getBegin());
-    mvch->KF.emplace_back(ge::core::time_point(0.2s), missile->getEnd());
-    mvch->setTarget(missile->getBeginPtr());
+    mvch->KF.emplace_back(ge::core::time_point(0s)  , missile->begin());
+    mvch->KF.emplace_back(ge::core::time_point(0.2s), missile->end());
+    mvch->setTarget(missile->beginPtr());
 
     auto event = [this, missile] { 
         ste::vector_erase(*missiles, missile);
