@@ -34,8 +34,6 @@ msg::Renderer::Renderer(QObject *parent) :
     _time(std::make_shared<double>()),
     _sceneToProcess(false),
     _simpleVT(std::make_shared<msg::SimpleVT>()),
-    // _skyboxVT(std::make_shared<msg::SkyboxVT>()),
-    _shieldVT(std::make_shared<msg::ShieldVT>()),
     _animationManager(std::make_shared<msg::AnimationManager>()),
     _laserManager(std::make_shared<msg::LaserManager>()),
     _shieldManager(std::make_shared<msg::ShieldManager>()),
@@ -109,23 +107,12 @@ void msg::Renderer::update() {
     _laserManager->update();
     stdr::for_each(_colliders, [](auto &c) {c->update();});
     stdr::for_each(_visualizationTechniques, [](auto &vt) {vt->update();});
-    _shieldVT->update();
     //std::cout << *_time << std::endl;
 
     auto projectionMatrix = perspectiveCamera->getProjection();
     auto viewMatrix = orbitCamera->getView();
     _simpleVT->program->setMatrix4fv("projectionMatrix", glm::value_ptr(projectionMatrix));
     _simpleVT->program->setMatrix4fv("viewMatrix", glm::value_ptr(viewMatrix));
-
-
-    glm::vec3 CP = static_cast<glm::vec3>(glm::inverse(viewMatrix)[3]);
-    glm::vec4 WP(-_viewport->x * 0.5f, -_viewport->y * 0.5f, _viewport->x, _viewport->y);
-    glm::mat4 OP = glm::ortho(-_viewport->x * 0.5f, _viewport->x * 0.5f, -_viewport->y * 0.5f, _viewport->y * 0.5f, -1.0f, 1.0f);
-    glm::mat4 OW = glm::lookAt(glm::vec3(0), glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 1.0f, 0.0));
-
-    _shieldVT->program->setMatrix4fv("projectionMatrix", glm::value_ptr(projectionMatrix));
-    _shieldVT->program->setMatrix4fv("viewMatrix", glm::value_ptr(viewMatrix));
-    _shieldVT->program->set1f("time", *_time);
 
 }
 
@@ -198,10 +185,16 @@ bool msg::Renderer::initShieldVT() {
     auto shield_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"shield_fs.glsl")));
     auto program(std::make_shared<ge::gl::Program>(shield_vs, shield_fs));
 
+    auto _shieldVT(std::make_shared<msg::ShieldVT>());
+
     _shieldVT->gl = _gl;
     _shieldVT->program = program;
     _shieldVT->shields = _shieldManager->shields;
+    _shieldVT->perspectiveCamera = perspectiveCamera;
+    _shieldVT->orbitCamera = orbitCamera;
+    _shieldVT->time = _time;
     _shieldVT->init();
+    _visualizationTechniques.emplace_back(_shieldVT);
 
     return true;
 }
@@ -249,5 +242,4 @@ void msg::Renderer::drawVT() {
     //std::cout << "Renderer drawVT" << std::endl;
     stdr::for_each(_visualizationTechniques, [](auto &vt){ vt->draw(); });
     _simpleVT->draw();
-    _shieldVT->draw();
 }

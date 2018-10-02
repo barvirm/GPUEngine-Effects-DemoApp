@@ -52,7 +52,6 @@ namespace msg {
         bool _sceneToProcess;
 
         std::shared_ptr<msg::SimpleVT> _simpleVT;
-        std::shared_ptr<msg::ShieldVT> _shieldVT;
         std::shared_ptr<msg::AnimationManager> _animationManager;
         std::shared_ptr<msg::LaserManager> _laserManager;
         std::shared_ptr<msg::ShieldManager> _shieldManager;
