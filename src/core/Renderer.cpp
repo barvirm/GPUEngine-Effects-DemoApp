@@ -34,7 +34,7 @@ msg::Renderer::Renderer(QObject *parent) :
     _time(std::make_shared<double>()),
     _sceneToProcess(false),
     _simpleVT(std::make_shared<msg::SimpleVT>()),
-    _skyboxVT(std::make_shared<msg::SkyboxVT>()),
+    // _skyboxVT(std::make_shared<msg::SkyboxVT>()),
     _shieldVT(std::make_shared<msg::ShieldVT>()),
     _animationManager(std::make_shared<msg::AnimationManager>()),
     _laserManager(std::make_shared<msg::LaserManager>()),
@@ -215,6 +215,7 @@ bool msg::Renderer::initSkyboxVT() {
     auto skybox_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"skybox_fs.glsl")));
     auto program(std::make_shared<ge::gl::Program>(skybox_vs, skybox_gs, skybox_fs));
 
+    auto _skyboxVT(std::make_shared<msg::SkyboxVT>());
     _skyboxVT->gl = _gl;
     _skyboxVT->program = program;
     _skyboxVT->perspectiveCamera = perspectiveCamera;
@@ -228,6 +229,7 @@ bool msg::Renderer::initSkyboxVT() {
     cubeMap->initTexture();
     _skyboxVT->cubeMap = cubeMap;
 
+    _visualizationTechniques.emplace_back(_skyboxVT);
     return true;
 }
 
@@ -245,7 +247,6 @@ bool msg::Renderer::initVT() {
 
 void msg::Renderer::drawVT() {
     //std::cout << "Renderer drawVT" << std::endl;
-    _skyboxVT->draw();
     stdr::for_each(_visualizationTechniques, [](auto &vt){ vt->draw(); });
     _simpleVT->draw();
     _shieldVT->draw();

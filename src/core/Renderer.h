@@ -20,7 +20,6 @@ namespace ge {
 
 namespace msg {
     class SimpleVT;
-    class SkyboxVT;
     class ShieldVT;
     class AnimationManager;
     class LaserManager;
@@ -53,7 +52,6 @@ namespace msg {
         bool _sceneToProcess;
 
         std::shared_ptr<msg::SimpleVT> _simpleVT;
-        std::shared_ptr<msg::SkyboxVT> _skyboxVT;
         std::shared_ptr<msg::ShieldVT> _shieldVT;
         std::shared_ptr<msg::AnimationManager> _animationManager;
         std::shared_ptr<msg::LaserManager> _laserManager;

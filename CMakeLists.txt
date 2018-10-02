@@ -25,7 +25,6 @@ set_target_properties(bar PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/../../Effects/src"
 )
 # ----------------------
-
 find_package(Qt5 REQUIRED COMPONENTS Quick Widgets)
 find_package(GPUEngine REQUIRED)
 find_package(AssimpModelLoader REQUIRED HINTS /home/makku/Programs/GPUEngine/geAd/AssimpModelLoader/cmake)
@@ -52,7 +51,6 @@ set(CORE_FILES
 )
 
 set(GRAPHICS_FILES
-    #src/graphics/VisualizationTechnique.h
     src/graphics/SimpleVT.cpp src/graphics/SimpleVT.h
     src/graphics/skybox/SkyboxVT.h src/graphics/skybox/SkyboxVT.cpp
     src/graphics/LaserManager.h src/graphics/LaserManager.cpp
