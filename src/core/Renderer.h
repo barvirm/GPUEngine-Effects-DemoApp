@@ -3,6 +3,7 @@
 #include <GERendererBase.h>
 #include <util/Stopwatch.h>
 #include <util/collision/Collider.h>
+#include <Effects/VisualizationTechnique.h>
 
 namespace ge {
     namespace util {
@@ -21,7 +22,6 @@ namespace msg {
     class SimpleVT;
     class SkyboxVT;
     class ShieldVT;
-    class LaserVT;
     class AnimationManager;
     class LaserManager;
     class ShieldManager;
@@ -55,11 +55,11 @@ namespace msg {
         std::shared_ptr<msg::SimpleVT> _simpleVT;
         std::shared_ptr<msg::SkyboxVT> _skyboxVT;
         std::shared_ptr<msg::ShieldVT> _shieldVT;
-        std::shared_ptr<msg::LaserVT> _laserVT;
         std::shared_ptr<msg::AnimationManager> _animationManager;
         std::shared_ptr<msg::LaserManager> _laserManager;
         std::shared_ptr<msg::ShieldManager> _shieldManager;
         std::vector<std::unique_ptr<msg::Collider>> _colliders;
+        std::vector<std::shared_ptr<eff::msg::VisualizationTechnique>> _visualizationTechniques;
 
     private:
         void setupCamera();

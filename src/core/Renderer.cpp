@@ -1,6 +1,7 @@
 #include <Renderer.h>
 
 #include <iostream>
+#include <util/Algorithm.h>
 
 #include <sg/AnimationManager.h>
 #include <sg/CubeMapTexture.h>
@@ -34,7 +35,6 @@ msg::Renderer::Renderer(QObject *parent) :
     _sceneToProcess(false),
     _simpleVT(std::make_shared<msg::SimpleVT>()),
     _skyboxVT(std::make_shared<msg::SkyboxVT>()),
-    _laserVT(std::make_shared<msg::LaserVT>()),
     _shieldVT(std::make_shared<msg::ShieldVT>()),
     _animationManager(std::make_shared<msg::AnimationManager>()),
     _laserManager(std::make_shared<msg::LaserManager>()),
@@ -107,8 +107,8 @@ void msg::Renderer::update() {
         _laserManager->addLaser({1, 1, 25}, {1, 1, 18}, {0, 0, 1, 1}, 2);
     }
     _laserManager->update();
-    std::for_each(begin(_colliders), end(_colliders), [](auto &c) {c->update();});
-    _laserVT->update();
+    stdr::for_each(_colliders, [](auto &c) {c->update();});
+    stdr::for_each(_visualizationTechniques, [](auto &vt) {vt->update();});
     _shieldVT->update();
     //std::cout << *_time << std::endl;
 
@@ -122,13 +122,6 @@ void msg::Renderer::update() {
     glm::vec4 WP(-_viewport->x * 0.5f, -_viewport->y * 0.5f, _viewport->x, _viewport->y);
     glm::mat4 OP = glm::ortho(-_viewport->x * 0.5f, _viewport->x * 0.5f, -_viewport->y * 0.5f, _viewport->y * 0.5f, -1.0f, 1.0f);
     glm::mat4 OW = glm::lookAt(glm::vec3(0), glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 1.0f, 0.0));
-
-    _laserVT->program->set4fv("viewport", glm::value_ptr(WP));
-    _laserVT->program->set3fv("_cameraPosition", glm::value_ptr(CP));
-    _laserVT->program->setMatrix4fv("u_View", glm::value_ptr(OW));
-    _laserVT->program->setMatrix4fv("u_Projection", glm::value_ptr(OP));
-    _laserVT->program->setMatrix4fv("projectionMatrix", glm::value_ptr(projectionMatrix));
-    _laserVT->program->setMatrix4fv("viewMatrix", glm::value_ptr(viewMatrix));
 
     _shieldVT->program->setMatrix4fv("projectionMatrix", glm::value_ptr(projectionMatrix));
     _shieldVT->program->setMatrix4fv("viewMatrix", glm::value_ptr(viewMatrix));
@@ -172,11 +165,14 @@ bool msg::Renderer::initLaserVT() {
     auto laser_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"laser_fs.glsl")));
     auto laser_gs(std::make_shared<ge::gl::Shader>(GL_GEOMETRY_SHADER, ge::core::loadTextFile(shaderDir+"laser_gs.glsl")));
     auto program(std::make_shared<ge::gl::Program>(laser_vs, laser_fs, laser_gs));
-    
+  
+    auto _laserVT(std::make_shared<msg::LaserVT>());
     _laserVT->gl = _gl;
     _laserVT->program = program;
     _laserVT->orbitCamera = orbitCamera;
     _laserVT->lasers = _laserManager->missiles;
+    _laserVT->viewport = _viewport;
+    _laserVT->perspectiveCamera = perspectiveCamera;
 
     std::string imagePath(APP_RESOURCES"/texture/laserbolt.png");
     std::shared_ptr<QtImage> image(QtImageLoader::loadImage(imagePath.c_str()));
@@ -188,8 +184,9 @@ bool msg::Renderer::initLaserVT() {
     materialComponent->setType(ge::sg::MaterialComponent::ComponentType::IMAGE);
 
     std::shared_ptr<ge::glsg::TextureFactory> textureFactory(std::make_shared<ge::glsg::DefaultTextureFactory>());
-    _laserVT->texture = textureFactory->create(materialComponent.get(), _gl);
     
+    _laserVT->texture = textureFactory->create(materialComponent.get(), _gl);
+    _visualizationTechniques.emplace_back(_laserVT);
     return true;
 }
 
@@ -249,7 +246,7 @@ bool msg::Renderer::initVT() {
 void msg::Renderer::drawVT() {
     //std::cout << "Renderer drawVT" << std::endl;
     _skyboxVT->draw();
+    stdr::for_each(_visualizationTechniques, [](auto &vt){ vt->draw(); });
     _simpleVT->draw();
-    _laserVT->draw();
     _shieldVT->draw();
 }
