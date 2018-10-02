@@ -59,7 +59,7 @@ namespace msg {
         std::shared_ptr<msg::LaserManager> _laserManager;
         std::shared_ptr<msg::ShieldManager> _shieldManager;
         std::vector<std::unique_ptr<msg::Collider>> _colliders;
-        std::vector<std::shared_ptr<eff::msg::VisualizationTechnique>> _visualizationTechniques;
+        std::vector<std::shared_ptr<msg::VisualizationTechnique>> _visualizationTechniques;
 
     private:
         void setupCamera();

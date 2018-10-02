@@ -1,6 +1,6 @@
 #pragma once
 
-#include <graphics/VisualizationTechnique.h>
+#include <Effects/VisualizationTechnique.h>
 #include <geSG/AttributeDescriptor.h>
 
 #include <glm/detail/type_mat.hpp>
