@@ -35,14 +35,12 @@ msg::Renderer::Renderer(QObject *parent) :
     _sceneToProcess(false),
     _animationManager(std::make_shared<msg::AnimationManager>()),
     _laserManager(std::make_shared<msg::LaserManager>(_animationManager, _time)),
-    _shieldManager(std::make_shared<msg::ShieldManager>()),
+    _shieldManager(std::make_shared<msg::ShieldManager>(_animationManager, _time)),
     _stopwatch(std::make_shared<app::util::Stopwatch<double>>())
 {
     std::cout << "Renderer ctor" << std::endl;
     _stopwatch->start();
     setupCamera();
-    _shieldManager->animationManager = _animationManager;
-    _shieldManager->time = _time;
 }
 
 void msg::Renderer::onViewportChanged() {
@@ -113,7 +111,6 @@ void msg::Renderer::setupCamera() {
     perspectiveCamera->setFovy(45.0f);
     perspectiveCamera->setAspect(1000.0f / 800.0f);
 }
-
 
 bool msg::Renderer::initSimpleVT() {
     std::cout << "Renderer initSimpleVT" << std::endl;
@@ -229,7 +226,6 @@ bool msg::Renderer::initVT() {
     i &= initLaserVT();
     i &= initShieldVT();
 
-    
     return i;
 }
 

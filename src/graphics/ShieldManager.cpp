@@ -24,10 +24,11 @@ void msg::ShieldManager::addShield(glm::vec3 center, float radius) {
     shields->emplace_back(shield);
 };
 
-msg::ShieldManager::ShieldManager() {
-    std::cout << "ShieldManager ctor" << std::endl;
-    shields = std::make_shared<std::vector<msg::Shield>>();
-}
+msg::ShieldManager::ShieldManager(std::shared_ptr<msg::AnimationManager> &animationManager, std::shared_ptr<double> &time) :
+    shields(std::make_shared<std::vector<msg::Shield>>()),
+    animationManager(animationManager),
+    time(time)
+{}
 
 void msg::ShieldManager::addPulseWave(msg::Shield &shield, glm::vec3 origin, const ge::core::time_point &t) {
     using namespace std::chrono_literals;

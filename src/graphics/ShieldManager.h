@@ -14,7 +14,7 @@ namespace msg {
 namespace msg {
     class ShieldManager {
         public:
-            ShieldManager();
+            ShieldManager(std::shared_ptr<msg::AnimationManager> &animationManager, std::shared_ptr<double> &time);
             ~ShieldManager() = default;
 
             void addShield(glm::vec3 center, float radius);
@@ -22,6 +22,7 @@ namespace msg {
             void addIntersection(msg::Shield &shield, glm::vec3 origin, const ge::core::time_point &t);
             
             std::shared_ptr<std::vector<msg::Shield>> shields;
+        protected:
             std::shared_ptr<msg::AnimationManager> animationManager;
             std::shared_ptr<double> time;
     };
