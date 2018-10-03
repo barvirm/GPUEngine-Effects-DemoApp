@@ -11,6 +11,10 @@
 
 using namespace std::chrono_literals;
 
+msg::LaserManager::LaserManager(std::shared_ptr<msg::AnimationManager> &animationManager, std::shared_ptr<app::util::Timer<double>> &timer) :
+    MissileManager(animationManager, timer) 
+{}
+
 void msg::LaserManager::update() {
     //std::cout << ShootingAnimationMap.size() << std::endl;
 }

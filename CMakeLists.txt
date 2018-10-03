@@ -61,7 +61,7 @@ set(UTIL_FILES
     src/util/MouseEventHandler.cpp src/util/MouseEventHandler.h
     src/util/intersectors/LineSphereIntersector.cpp src/util/intersectors/LineSphereIntersector.h
     src/util/collision/LaserShieldCollider.cpp src/util/collision/LaserShieldCollider.h
-    src/util/Stopwatch.h
+    src/util/Timer.h
     src/util/Algorithm.h
     src/util/collision/Collider.h
 )

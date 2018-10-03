@@ -7,7 +7,7 @@
 namespace msg { 
     class LaserManager : public MissileManager<msg::Laser> {
         public:
-            LaserManager(std::shared_ptr<msg::AnimationManager> &animationManager, std::shared_ptr<double> &time) : MissileManager(animationManager, time) {};
+            LaserManager(std::shared_ptr<msg::AnimationManager> &animationManager, std::shared_ptr<app::util::Timer<double>> &timer);
             void addLaser(const glm::vec3 &&start, const glm::vec3 &&end, const glm::vec4 &&color, float &&f);
             void addLaser(const glm::vec3 &start, const glm::vec3 &end, const glm::vec4 &color, float &f);
             void update() override;

@@ -10,6 +10,7 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 #include <memory>
+#include <util/Timer.h>
 
 
 
@@ -24,10 +25,10 @@ void msg::ShieldManager::addShield(glm::vec3 center, float radius) {
     shields->emplace_back(shield);
 };
 
-msg::ShieldManager::ShieldManager(std::shared_ptr<msg::AnimationManager> &animationManager, std::shared_ptr<double> &time) :
+msg::ShieldManager::ShieldManager(std::shared_ptr<msg::AnimationManager> &animationManager, std::shared_ptr<app::util::Timer<double>> &timer) :
     shields(std::make_shared<std::vector<msg::Shield>>()),
     animationManager(animationManager),
-    time(time)
+    timer(timer)
 {}
 
 void msg::ShieldManager::addPulseWave(msg::Shield &shield, glm::vec3 origin, const ge::core::time_point &t) {
@@ -45,7 +46,7 @@ void msg::ShieldManager::addPulseWave(msg::Shield &shield, glm::vec3 origin, con
     floatChannel->KF.emplace_back(t, 1);
     shield.addPulseWave(pulseWave);
 
-    animationManager->playAnimation(anim, ge::core::time_point(std::chrono::duration<double>(*time.get())));
+    animationManager->playAnimation(anim, ge::core::time_point(std::chrono::duration<double>(timer->getTime())));
 
 }
 
@@ -63,7 +64,7 @@ void msg::ShieldManager::addIntersection(msg::Shield &shield, glm::vec3 origin, 
     floatChannel->KF.emplace_back(t, 1.0f);
 
     shield.addIntersection(intersection);
-    animationManager->playAnimation(anim, ge::core::time_point(std::chrono::duration<double>(*time.get())));
+    animationManager->playAnimation(anim, ge::core::time_point(std::chrono::duration<double>(timer->getTime())));
 
 }
 

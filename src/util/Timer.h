@@ -7,16 +7,12 @@
 namespace app {
     namespace util {
 
-        template<
-            typename T,
-            typename std::enable_if<std::is_floating_point<T>::value, T>::type* = nullptr, 
-            class _Clock = std::chrono::high_resolution_clock 
-        >
-        class Stopwatch {
+        template<typename T>
+        class Timer {
 
             public:
-                Stopwatch() = default;
-                ~Stopwatch() = default;
+                Timer() = default;
+                ~Timer() = default;
 
                 void start() { _startTP = clock::now(); }
                 void pause() { _pauseTP = clock::now(); _pause = true; }
@@ -28,7 +24,7 @@ namespace app {
                 }
 
                 protected:
-                    using clock = _Clock;
+                    using clock = std::chrono::high_resolution_clock;
                     std::chrono::time_point<clock> _startTP;
                     std::chrono::time_point<clock> _pauseTP;
                     T _currentTime;

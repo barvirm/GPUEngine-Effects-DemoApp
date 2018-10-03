@@ -11,10 +11,15 @@ namespace msg {
     class AnimationManager;
 }
 
+namespace app::util {
+    template<typename T>
+    class Timer;
+}
+
 namespace msg {
     class ShieldManager {
         public:
-            ShieldManager(std::shared_ptr<msg::AnimationManager> &animationManager, std::shared_ptr<double> &time);
+            ShieldManager(std::shared_ptr<msg::AnimationManager> &animationManager, std::shared_ptr<app::util::Timer<double>> &time);
             ~ShieldManager() = default;
 
             void addShield(glm::vec3 center, float radius);
@@ -24,6 +29,6 @@ namespace msg {
             std::shared_ptr<std::vector<msg::Shield>> shields;
         protected:
             std::shared_ptr<msg::AnimationManager> animationManager;
-            std::shared_ptr<double> time;
+            std::shared_ptr<app::util::Timer<double>> timer;
     };
 }

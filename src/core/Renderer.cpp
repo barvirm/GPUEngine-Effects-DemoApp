@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <util/Algorithm.h>
+#include <util/Timer.h>
 
 #include <sg/AnimationManager.h>
 #include <sg/CubeMapTexture.h>
@@ -31,15 +32,15 @@ msg::Renderer::Renderer(QObject *parent) :
     perspectiveCamera(std::make_shared<ge::util::PerspectiveCamera>()),
     _scene(nullptr),
     _glScene(nullptr),
-    _time(std::make_shared<double>()),
     _sceneToProcess(false),
+    _timer(std::make_shared<app::util::Timer<double>>()),
     _animationManager(std::make_shared<msg::AnimationManager>()),
-    _laserManager(std::make_shared<msg::LaserManager>(_animationManager, _time)),
-    _shieldManager(std::make_shared<msg::ShieldManager>(_animationManager, _time)),
-    _stopwatch(std::make_shared<app::util::Stopwatch<double>>())
+    _laserManager(std::make_shared<msg::LaserManager>(_animationManager, _timer)),
+    _shieldManager(std::make_shared<msg::ShieldManager>(_animationManager, _timer)),
+    _time(std::make_shared<double>())
 {
     std::cout << "Renderer ctor" << std::endl;
-    _stopwatch->start();
+    _timer->start();
     setupCamera();
 }
 
@@ -84,8 +85,8 @@ void msg::Renderer::setScene(std::shared_ptr<ge::sg::Scene> &loadedScene) {
 
 void msg::Renderer::update() {
 
-    *_time = _stopwatch->getTime();
-    _animationManager->update(std::chrono::duration<double>(*_time));
+    *_time = _timer->getTime();
+    _animationManager->update(std::chrono::duration<double>(_timer->getTime()));
     
     if (_sceneToProcess) {
         std::cout << "Scene Processing" << std::endl;

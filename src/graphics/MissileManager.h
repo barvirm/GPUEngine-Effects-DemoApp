@@ -6,6 +6,7 @@
 #include <geSG/Animation.h>
 #include <sg/AnimationManager.h>
 #include <iostream>
+#include <util/Timer.h>
 
 namespace msg {
     class AnimationManager;
@@ -15,7 +16,7 @@ namespace msg {
     template <class T>
     class MissileManager {
     public:
-        MissileManager(std::shared_ptr<AnimationManager> &animManager, std::shared_ptr<double> &t);
+        MissileManager(std::shared_ptr<AnimationManager> &animManager, std::shared_ptr<app::util::Timer<double>> &timer);
         void stopAnimation(const std::shared_ptr<const T> &missile);
         void startHitAnimation(const std::shared_ptr<T> &missile);
         virtual void update() = 0;
@@ -26,7 +27,7 @@ namespace msg {
         std::unordered_map<const T *, std::shared_ptr<ge::sg::Animation>> FinishAnimationMap;
     protected:
         std::shared_ptr<msg::AnimationManager> animationManager;
-        std::shared_ptr<double> time;
+        std::shared_ptr<app::util::Timer<double>> timer;
         void addMissile(std::shared_ptr<T> &missile);
         virtual void getShotingAnimation(const std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
         virtual void getFinishAnimation (const std::shared_ptr<T> &missile, std::shared_ptr<ge::sg::Animation> &animation) = 0;
@@ -35,10 +36,10 @@ namespace msg {
     };
 
     template<class T>
-    MissileManager<T>::MissileManager(std::shared_ptr<AnimationManager> &animationManager, std::shared_ptr<double> &time) :
+    MissileManager<T>::MissileManager(std::shared_ptr<AnimationManager> &animationManager, std::shared_ptr<app::util::Timer<double>> &timer) :
         missiles(std::make_shared<std::vector<std::shared_ptr<T>>>()),
         animationManager(animationManager),
-        time(time)
+        timer(timer)
     {}
 
     template<class T>
@@ -47,7 +48,7 @@ namespace msg {
         std::shared_ptr<ge::sg::Animation> animation;
         getShotingAnimation(missile,animation);
         ShootingAnimationMap[missile.get()] = animation;
-        auto now(std::chrono::duration<double>(*time.get()));
+        auto now(std::chrono::duration<double>(timer->getTime()));
         animationManager->playAnimation(animation, now);
     }
 
@@ -61,7 +62,7 @@ namespace msg {
         std::shared_ptr<ge::sg::Animation> animation;
         getFinishAnimation(missile, animation);
         FinishAnimationMap[missile.get()] = animation;
-        auto now(std::chrono::duration<double>(*time.get()));
+        auto now(std::chrono::duration<double>(timer->getTime()));
         animationManager->playAnimation(animation, now);
     }
 }

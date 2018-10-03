@@ -1,7 +1,6 @@
 #pragma once
 
 #include <GERendererBase.h>
-#include <util/Stopwatch.h>
 #include <util/collision/Collider.h>
 #include <Effects/VisualizationTechnique.h>
 
@@ -16,6 +15,11 @@ namespace ge {
     namespace glsg {
         class GLScene;
     }
+}
+
+namespace app::util {
+    template<typename T>
+    class Timer;
 }
 
 namespace msg {
@@ -33,7 +37,7 @@ namespace msg {
         void setupGLState();
         std::shared_ptr<ge::util::OrbitCamera> orbitCamera;
         std::shared_ptr<ge::util::PerspectiveCamera> perspectiveCamera;
-        std::shared_ptr<app::util::Stopwatch<double>> _stopwatch;
+        std::shared_ptr<app::util::Timer<double>> _timer;
         virtual void setScene(std::shared_ptr<ge::sg::Scene> &loadedScene);
 
     public slots:
