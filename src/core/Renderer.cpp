@@ -33,7 +33,6 @@ msg::Renderer::Renderer(QObject *parent) :
     _glScene(nullptr),
     _time(std::make_shared<double>()),
     _sceneToProcess(false),
-    _simpleVT(std::make_shared<msg::SimpleVT>()),
     _animationManager(std::make_shared<msg::AnimationManager>()),
     _laserManager(std::make_shared<msg::LaserManager>()),
     _shieldManager(std::make_shared<msg::ShieldManager>()),
@@ -95,9 +94,7 @@ void msg::Renderer::update() {
     
     if (_sceneToProcess) {
         std::cout << "Scene Processing" << std::endl;
-        _glScene = ge::glsg::GLSceneProcessor::processScene(_scene,_gl);
-        _simpleVT->setScene(_glScene);
-        _simpleVT->processScene();
+
         _sceneToProcess = false;
 
         _shieldManager->addShield(glm::vec3(0), 3.7f);
@@ -107,13 +104,6 @@ void msg::Renderer::update() {
     _laserManager->update();
     stdr::for_each(_colliders, [](auto &c) {c->update();});
     stdr::for_each(_visualizationTechniques, [](auto &vt) {vt->update();});
-    //std::cout << *_time << std::endl;
-
-    auto projectionMatrix = perspectiveCamera->getProjection();
-    auto viewMatrix = orbitCamera->getView();
-    _simpleVT->program->setMatrix4fv("projectionMatrix", glm::value_ptr(projectionMatrix));
-    _simpleVT->program->setMatrix4fv("viewMatrix", glm::value_ptr(viewMatrix));
-
 }
 
 void msg::Renderer::setupCamera() {
@@ -134,13 +124,23 @@ bool msg::Renderer::initSimpleVT() {
     std::cout << "Renderer initSimpleVT" << std::endl;
 
     std::string shaderDir(APP_RESOURCES"/shaders/");
+    auto _simpleVT(std::make_shared<msg::SimpleVT>());
     _simpleVT->gl = _gl;
+    _simpleVT->perspectiveCamera = perspectiveCamera;
+    _simpleVT->orbitCamera = orbitCamera;
 
     auto simple_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::core::loadTextFile(shaderDir+"simple_vs.glsl")));
     auto simple_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"simple_fs.glsl")));
     auto prog(std::make_shared<ge::gl::Program>(simple_vs, simple_fs));
 
     _simpleVT->program = prog;
+
+    _glScene = ge::glsg::GLSceneProcessor::processScene(_scene,_gl);
+    _simpleVT->setScene(_glScene);
+    _simpleVT->processScene();
+
+    _visualizationTechniques.emplace_back(_simpleVT);
+
     return true;
 }
 
@@ -229,8 +229,8 @@ bool msg::Renderer::initSkyboxVT() {
 bool msg::Renderer::initVT() {
     std::cout << "Renderer initVT" << std::endl;
     bool i = true;
-    i &= initSimpleVT();
     i &= initSkyboxVT();
+    i &= initSimpleVT();
     i &= initLaserVT();
     i &= initShieldVT();
 
@@ -241,5 +241,4 @@ bool msg::Renderer::initVT() {
 void msg::Renderer::drawVT() {
     //std::cout << "Renderer drawVT" << std::endl;
     stdr::for_each(_visualizationTechniques, [](auto &vt){ vt->draw(); });
-    _simpleVT->draw();
 }

@@ -11,6 +11,8 @@
 
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <geUtil/OrbitCamera.h>
+#include <geUtil/PerspectiveCamera.h>
 
 void msg::SimpleVT::setScene(std::shared_ptr<ge::glsg::GLScene> &scene) {
     glScene = scene;
@@ -59,7 +61,10 @@ void msg::SimpleVT::processScene() {
     }
 }
 
-void msg::SimpleVT::update() {}
+void msg::SimpleVT::update() {
+    program->setMatrix4fv("projectionMatrix", glm::value_ptr(perspectiveCamera->getProjection()));
+    program->setMatrix4fv("viewMatrix", glm::value_ptr(orbitCamera->getView()));
+}
 
 void msg::SimpleVT::draw() {
     program->use();

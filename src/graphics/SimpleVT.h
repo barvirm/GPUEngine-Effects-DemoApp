@@ -44,6 +44,8 @@ namespace msg {
 
         std::shared_ptr<ge::gl::Context> gl;
         std::shared_ptr<ge::gl::Program> program;
+        std::shared_ptr<ge::util::OrbitCamera> orbitCamera;
+        std::shared_ptr<ge::util::PerspectiveCamera> perspectiveCamera;
         std::vector<std::shared_ptr<glm::mat4>> matrices;
 
     protected:
