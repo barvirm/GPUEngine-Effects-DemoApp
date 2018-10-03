@@ -6,7 +6,6 @@
 #include <geSG/AnimationChannel.h>
 #include <sg/AnimationChannel.h>
 #include <util/Algorithm.h>
-#include <geUtil/OrbitCamera.h>
 #include <sg/AnimationEventChannel.h>
 
 

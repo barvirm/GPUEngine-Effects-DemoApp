@@ -43,7 +43,6 @@ msg::Renderer::Renderer(QObject *parent) :
     setupCamera();
     _laserManager->animationManager = _animationManager;
     _laserManager->time = _time;
-    _laserManager->orbitCamera = orbitCamera;
     _shieldManager->animationManager = _animationManager;
     _shieldManager->time = _time;
 }
