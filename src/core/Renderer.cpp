@@ -34,15 +34,13 @@ msg::Renderer::Renderer(QObject *parent) :
     _time(std::make_shared<double>()),
     _sceneToProcess(false),
     _animationManager(std::make_shared<msg::AnimationManager>()),
-    _laserManager(std::make_shared<msg::LaserManager>()),
+    _laserManager(std::make_shared<msg::LaserManager>(_animationManager, _time)),
     _shieldManager(std::make_shared<msg::ShieldManager>()),
     _stopwatch(std::make_shared<app::util::Stopwatch<double>>())
 {
     std::cout << "Renderer ctor" << std::endl;
     _stopwatch->start();
     setupCamera();
-    _laserManager->animationManager = _animationManager;
-    _laserManager->time = _time;
     _shieldManager->animationManager = _animationManager;
     _shieldManager->time = _time;
 }
@@ -93,9 +91,7 @@ void msg::Renderer::update() {
     
     if (_sceneToProcess) {
         std::cout << "Scene Processing" << std::endl;
-
         _sceneToProcess = false;
-
         _shieldManager->addShield(glm::vec3(0), 3.7f);
         _laserManager->addLaser({0, 0, 8 }, {0, 0, 15}, {0, 0, 1, 1}, 2);
         _laserManager->addLaser({1, 1, 25}, {1, 1, 18}, {0, 0, 1, 1}, 2);
