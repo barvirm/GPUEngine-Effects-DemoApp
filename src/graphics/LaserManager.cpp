@@ -46,8 +46,10 @@ void msg::LaserManager::getFinishAnimation(const std::shared_ptr<msg::Laser> &mi
     auto mvch(std::make_shared<msg::AnimationChannel<glm::vec3>>());
     auto evch(std::make_shared<msg::AnimationEventChannel>());
 
+    auto animationDuration = ge::core::time_point(0.5s);
+
     mvch->KF.emplace_back(ge::core::time_point(0s)  , missile->begin());
-    mvch->KF.emplace_back(ge::core::time_point(0.2s), missile->end());
+    mvch->KF.emplace_back(animationDuration         , missile->end());
     mvch->setTarget(missile->beginPtr());
 
     auto event = [this, missile] { 
@@ -57,7 +59,7 @@ void msg::LaserManager::getFinishAnimation(const std::shared_ptr<msg::Laser> &mi
     };
 
     auto animationEvent = msg::AnimationEventFactory::create(event);
-    evch->KF.emplace_back(ge::core::time_point(0.2s), animationEvent);
+    evch->KF.emplace_back(animationDuration         , animationEvent);
 
     anim->channels.emplace_back(evch);
     anim->channels.emplace_back(mvch);

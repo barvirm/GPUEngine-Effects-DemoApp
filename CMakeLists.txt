@@ -16,15 +16,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 project(${PROJECT_NAME})
 
 find_package(glm REQUIRED)
-#find_package(Effects REQUIRED)
+find_package(Effects REQUIRED) # set with ccmake
 
-# Only Debug option ---
-add_library(bar SHARED IMPORTED) # or STATIC instead of SHARED
-set_target_properties(bar PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/../../build/lib/libEffects.so"
-  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/../../Effects/src"
-)
-# ----------------------
 find_package(Qt5 REQUIRED COMPONENTS Quick Widgets)
 find_package(GPUEngine REQUIRED)
 find_package(AssimpModelLoader REQUIRED HINTS /home/makku/Programs/GPUEngine/geAd/AssimpModelLoader/cmake)
