@@ -46,7 +46,8 @@ msg::Renderer::Renderer(QObject *parent) :
 
 void msg::Renderer::onViewportChanged() {
     std::cout << "onViewportChanged" << std::endl;
-    _gl->glViewport(0, 0, _viewport->x, _viewport->y);
+    if ( _gl != nullptr )
+        _gl->glViewport(0, 0, _viewport->x, _viewport->y);
     perspectiveCamera->setAspect(_viewport->x / _viewport->y);
 }
 

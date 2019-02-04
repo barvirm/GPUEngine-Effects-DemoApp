@@ -3,7 +3,7 @@
 #include <Effects/VisualizationTechnique.h>
 #include <geSG/AttributeDescriptor.h>
 
-#include <glm/detail/type_mat.hpp>
+#include <glm/mat4x4.hpp>
 #include <memory>
 #include <unordered_map>
 
