@@ -16,6 +16,7 @@ std::shared_ptr<ge::sg::Scene> app::SceneLoader::loadScene(const char *modelFile
     QString modelFileName(modelFilePath);
     QFileInfo fileInfo(modelFileName);
     std::string modelPath(qUtf8Printable(fileInfo.canonicalPath() + "/"));
+	std::cout << modelFileName.toUtf8().constData() << std::endl;
     std::shared_ptr<ge::sg::Scene> scene = std::shared_ptr<ge::sg::Scene>(AssimpModelLoader::loadScene(modelFileName.toUtf8().constData(), aiProcess_Triangulate | aiProcess_SortByPType  | aiProcess_FlipUVs));
     if (scene == nullptr) {
         std::cerr << "Fail to load scene" << std::endl;
