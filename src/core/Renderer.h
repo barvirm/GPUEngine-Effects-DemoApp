@@ -59,15 +59,17 @@ namespace msg {
         std::vector<std::unique_ptr<msg::Collider>> _colliders;
         std::vector<std::shared_ptr<msg::VisualizationTechnique>> _visualizationTechniques;
 
+
     private:
         void setupCamera();
         bool initVT();
         bool initSimpleVT();
         bool initSkyboxVT();
         bool initLaserVT();
-        bool initTestVT();
         bool initShieldVT();
         void drawVT();
         void initColliders();
+
+
     };
 }

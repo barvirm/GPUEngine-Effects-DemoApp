@@ -67,6 +67,7 @@ void msg::SimpleVT::update() {
 }
 
 void msg::SimpleVT::draw() {
+	// std::cout << "SIMPLE DRAW" << std::endl;
     program->use();
 
     if (!glScene) return;

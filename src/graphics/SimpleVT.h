@@ -17,6 +17,8 @@ namespace ge {
 
     namespace sg {
         class Scene;
+		class Mesh;
+		class Material;
     }
 
     namespace glsg {

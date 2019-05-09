@@ -17,7 +17,6 @@ int main(int argc, char **argv) {
 
     std::shared_ptr<app::MouseEventHandler> mouseEventHandler(std::make_shared<app::MouseEventHandler>(renderer.orbitCamera));
     app.installEventFilter(mouseEventHandler.get());
-
     qw.show();
 
 

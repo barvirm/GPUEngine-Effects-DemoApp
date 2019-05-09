@@ -1,12 +1,17 @@
 #include <skybox/SkyboxVT.h>
+#include <sg/CubeMapTexture.h>
+
 #include <geGL/geGL.h>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
+
 #include <geUtil/PerspectiveCamera.h>
 #include <geUtil/OrbitCamera.h>
-#include <sg/CubeMapTexture.h>
+
 
 void msg::SkyboxVT::draw() {
 

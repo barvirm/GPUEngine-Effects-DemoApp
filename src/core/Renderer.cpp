@@ -12,7 +12,7 @@
 
 #include <geGL/geGL.h>
 #include <geSG/Material.h>
-#include <geCore/Text.h>
+#include <geUtil/Text.h>
 #include <geUtil/OrbitCamera.h>
 #include <geUtil/PerspectiveCamera.h>
 
@@ -21,6 +21,7 @@
 #include <LaserManager.h>
 #include <skybox/SkyboxVT.h>
 #include <Effects/laser/LaserVT.h>
+#include <Effects/laser/TestVT.h>
 #include <Effects/shield/ShieldVT.h>
 #include <ShieldManager.h>
 
@@ -52,6 +53,7 @@ void msg::Renderer::onViewportChanged() {
 }
 
 void msg::Renderer::onContextCreated() {
+    std::cout << "onContextCreated" << std::endl;
     initVT();
     initColliders();
 }
@@ -123,8 +125,8 @@ bool msg::Renderer::initSimpleVT() {
     _simpleVT->perspectiveCamera = perspectiveCamera;
     _simpleVT->orbitCamera = orbitCamera;
 
-    auto simple_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::core::loadTextFile(shaderDir+"simple_vs.glsl")));
-    auto simple_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"simple_fs.glsl")));
+    auto simple_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::util::loadTextFile(shaderDir+"simple_vs.glsl")));
+    auto simple_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::util::loadTextFile(shaderDir+"simple_fs.glsl")));
     auto prog(std::make_shared<ge::gl::Program>(simple_vs, simple_fs));
 
     _simpleVT->program = prog;
@@ -142,18 +144,14 @@ bool msg::Renderer::initLaserVT() {
     std::cout << "Renderer initLaserVT" << std::endl;
 
     std::string shaderDir(APP_RESOURCES"/shaders/");
-    auto laser_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::core::loadTextFile(shaderDir+"laser_vs.glsl")));
-    auto laser_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"laser_fs.glsl")));
-    auto laser_gs(std::make_shared<ge::gl::Shader>(GL_GEOMETRY_SHADER, ge::core::loadTextFile(shaderDir+"laser_gs.glsl")));
+    auto laser_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::util::loadTextFile(shaderDir+"laser_vs.glsl")));
+    auto laser_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::util::loadTextFile(shaderDir+"laser_fs.glsl")));
+    auto laser_gs(std::make_shared<ge::gl::Shader>(GL_GEOMETRY_SHADER, ge::util::loadTextFile(shaderDir+"laser_gs.glsl")));
     auto program(std::make_shared<ge::gl::Program>(laser_vs, laser_fs, laser_gs));
   
-    auto _laserVT(std::make_shared<msg::LaserVT>());
-    _laserVT->gl = _gl;
-    _laserVT->program = program;
-    _laserVT->orbitCamera = orbitCamera;
+    auto _laserVT(std::make_shared<msg::LaserVT>(_gl, program, orbitCamera, perspectiveCamera));
     _laserVT->lasers = _laserManager->missiles;
     _laserVT->viewport = _viewport;
-    _laserVT->perspectiveCamera = perspectiveCamera;
 
     std::string imagePath(APP_RESOURCES"/texture/laserbolt.png");
     std::shared_ptr<QtImage> image(QtImageLoader::loadImage(imagePath.c_str()));
@@ -163,7 +161,6 @@ bool msg::Renderer::initLaserVT() {
     materialComponent->filePath = imagePath;
     materialComponent->image = image;
     materialComponent->setType(ge::sg::MaterialComponent::ComponentType::IMAGE);
-
     std::shared_ptr<ge::glsg::TextureFactory> textureFactory(std::make_shared<ge::glsg::DefaultTextureFactory>());
     
     _laserVT->texture = textureFactory->create(materialComponent.get(), _gl);
@@ -175,8 +172,8 @@ bool msg::Renderer::initShieldVT() {
     std::cout << "Renderer initShieldVT" << std::endl;
     std::string shaderDir(APP_RESOURCES"/shaders/");
 
-    auto shield_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::core::loadTextFile(shaderDir+"shield_vs.glsl")));
-    auto shield_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"shield_fs.glsl")));
+    auto shield_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::util::loadTextFile(shaderDir+"shield_vs.glsl")));
+    auto shield_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::util::loadTextFile(shaderDir+"shield_fs.glsl")));
     auto program(std::make_shared<ge::gl::Program>(shield_vs, shield_fs));
 
     auto _shieldVT(std::make_shared<msg::ShieldVT>());
@@ -197,9 +194,9 @@ bool msg::Renderer::initSkyboxVT() {
     std::cout << "Renderer initSkyboxVT" << std::endl;
 
     std::string shaderDir(APP_RESOURCES"/shaders/");
-    auto skybox_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::core::loadTextFile(shaderDir+"skybox_vs.glsl")));
-    auto skybox_gs(std::make_shared<ge::gl::Shader>(GL_GEOMETRY_SHADER, ge::core::loadTextFile(shaderDir+"skybox_gs.glsl")));
-    auto skybox_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::core::loadTextFile(shaderDir+"skybox_fs.glsl")));
+    auto skybox_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::util::loadTextFile(shaderDir+"skybox_vs.glsl")));
+    auto skybox_gs(std::make_shared<ge::gl::Shader>(GL_GEOMETRY_SHADER, ge::util::loadTextFile(shaderDir+"skybox_gs.glsl")));
+    auto skybox_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::util::loadTextFile(shaderDir+"skybox_fs.glsl")));
     auto program(std::make_shared<ge::gl::Program>(skybox_vs, skybox_gs, skybox_fs));
 
     auto _skyboxVT(std::make_shared<msg::SkyboxVT>());

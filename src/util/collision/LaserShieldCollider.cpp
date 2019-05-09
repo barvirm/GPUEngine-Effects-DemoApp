@@ -6,6 +6,7 @@
 #include <Effects/shield/Intersection.h>
 #include <Effects/shield/PulseWave.h>
 #include <intersectors/LineSphereIntersector.h>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
 void msg::LaserShieldCollider::update() {
