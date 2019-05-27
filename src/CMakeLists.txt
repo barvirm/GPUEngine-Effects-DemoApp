@@ -13,7 +13,8 @@ SET(SOURCE_FILES
 	graphics/SimpleVT.cpp
 	graphics/skybox/SkyboxVT.cpp
 	graphics/LaserManager.cpp
-	graphics/ShieldManager.cpp
+   graphics/ShieldManager.cpp
+   graphics/testing/TestingVT.cpp
 
 	util/MouseEventHandler.cpp
 	util/intersectors/LineSphereIntersector.cpp
@@ -42,6 +43,8 @@ SET(HEADER_FILES
    graphics/skybox/SkyboxVT.h 
    graphics/LaserManager.h 
    graphics/ShieldManager.h 
+   graphics/testing/TestingVT.h
+   
    
    util/MouseEventHandler.h
    util/intersectors/LineSphereIntersector.h

@@ -67,6 +67,7 @@ namespace msg {
         bool initSkyboxVT();
         bool initLaserVT();
         bool initShieldVT();
+        bool initTestingVT();
         void drawVT();
         void initColliders();
 

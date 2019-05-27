@@ -32,6 +32,5 @@ FIND_PACKAGE(QtImageLoader REQUIRED)
 
 #Path to resources (models, texture, glsl code)
 SET(DEFAULT_RESOURCES_PATH "${CMAKE_CURRENT_LIST_DIR}/resources" CACHE PATH "Relative or absolute path to Application resources.")
-
 #Compilation is with sources and header files
 ADD_SUBDIRECTORY(src)

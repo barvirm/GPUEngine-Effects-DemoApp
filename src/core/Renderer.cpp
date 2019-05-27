@@ -25,6 +25,8 @@
 #include <Effects/shield/ShieldVT.h>
 #include <ShieldManager.h>
 
+#include<testing/TestingVT.h>
+
 #include <util/collision/LaserShieldCollider.h>
 
 msg::Renderer::Renderer(QObject *parent) :
@@ -224,6 +226,7 @@ bool msg::Renderer::initVT() {
     i &= initSimpleVT();
     i &= initLaserVT();
     i &= initShieldVT();
+    i &= initTestingVT();
 
     return i;
 }
@@ -231,4 +234,26 @@ bool msg::Renderer::initVT() {
 void msg::Renderer::drawVT() {
     //std::cout << "Renderer drawVT" << std::endl;
     stdr::for_each(_visualizationTechniques, [](auto &vt){ vt->draw(); });
+}
+
+bool msg::Renderer::initTestingVT() {
+    std::cout << "initTestingVT" << std::endl;
+
+    std::string shaderDir(APP_RESOURCES"/shaders/");
+    auto testing_vs(std::make_shared<ge::gl::Shader>(GL_VERTEX_SHADER, ge::util::loadTextFile(shaderDir+"testing_vs.glsl")));
+    auto testing_fs(std::make_shared<ge::gl::Shader>(GL_FRAGMENT_SHADER, ge::util::loadTextFile(shaderDir+"testing_fs.glsl")));
+    auto program(std::make_shared<ge::gl::Program>(testing_vs, testing_fs));
+
+    // std::cout << "Program: " << (int)program->getValidateStatus() << std::endl;
+
+    auto _testingVT(std::make_shared<msg::TestingVT>(_gl));
+    _testingVT->gl = _gl;
+    _testingVT->program = program;
+    _testingVT->perspectiveCamera = perspectiveCamera;
+    _testingVT->orbitCamera = orbitCamera;
+
+    _visualizationTechniques.emplace_back(_testingVT);
+    return true;
+
+
 }
